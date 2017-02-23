@@ -1,0 +1,64 @@
+\documentclass[format=acmsmall, review=false, screen=true]{acmart}
+
+\usepackage{booktabs} % For formal tables
+
+\usepackage[ruled]{algorithm2e} % For algorithms
+\renewcommand{\algorithmcfname}{ALGORITHM}
+\SetAlFnt{\small}
+\SetAlCapFnt{\small}
+\SetAlCapNameFnt{\small}
+\SetAlCapHSkip{0pt}
+\IncMargin{-\parindent}
+
+% Document starts
+\begin{document}
+    % Title portion. Note the short title for running heads 
+    \title[A Multifrequency MAC for Wireless Sensor]{A Multifrequency MAC
+        Specially Designed for Wireless Sensor  Network Applications}  
+    \author{Gang Zhou}
+    \orcid{1234-5678-9012-3456}
+    \affiliation{%
+        \institution{College of William and Mary}
+        \streetaddress{104 Jamestown Rd}
+        \city{Williamsburg}
+        \state{VA}
+        \postcode{23185}
+        \country{USA}}
+    \author{Yafeng Wu}
+    \affiliation{%
+        \institution{University of Virginia}
+        \department{School of Engineering}
+        \city{Charlottesville}
+        \state{VA}
+        \postcode{22903}
+        \country{USA}
+    }
+    \author{Ting Yan}
+    \affiliation{%
+        \institution{Eaton Innovation Center}
+        \city{Prague}
+        \country{Czech Republic}}
+    \author{Tian He}
+    \affiliation{%
+        \institution{University of Minnesota}
+        \country{USA}}
+    \author{Chengdu Huang}
+    \author{John A. Stankovic}
+    \author{Tarek F. Abdelzaher}
+    \affiliation{%
+        \institution{University of Virginia}
+        \department{School of Engineering}
+        \city{Charlottesville}
+        \state{VA}
+        \postcode{22903}
+        \country{USA}
+    }
+    
+    \maketitle
+    
+    % The default list of authors is too long for headers}
+    \renewcommand{\shortauthors}{G. Zhou et al.}
+    
+    \input{proposal_body}
+    
+\end{document}
