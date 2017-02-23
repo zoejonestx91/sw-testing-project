@@ -1,21 +1,30 @@
-\documentclass[format=acmsmall, review=false, screen=true]{acmart}
+\documentclass[sigconf]{acmart}
 
 \usepackage{booktabs} % For formal tables
 
-\usepackage[ruled]{algorithm2e} % For algorithms
-\renewcommand{\algorithmcfname}{ALGORITHM}
-\SetAlFnt{\small}
-\SetAlCapFnt{\small}
-\SetAlCapNameFnt{\small}
-\SetAlCapHSkip{0pt}
-\IncMargin{-\parindent}
+% Copyright
+\setcopyright{none}
+%\setcopyright{acmcopyright}
+%\setcopyright{acmlicensed}
+%\setcopyright{rightsretained}
+%\setcopyright{usgov}
+%\setcopyright{usgovmixed}
+%\setcopyright{cagov}
+%\setcopyright{cagovmixed}
 
-% Document starts
 \begin{document}
-    % Title portion. Note the short title for running heads 
     \title[Project Proposal]{Project Proposal}  
     \author{Tristan G. Duckworth}
+    \email{tristan.duckworth@utdallas.edu}
+    \affiliation{%
+        \institution{University of Texas at Dallas}
+        \streetaddress{800 West Campbell Road}
+        \city{Richardson}
+        \state{TX}
+        \postcode{75080}
+        \country{USA}}
     \author{Zoe E. Jones}
+    \email{zoe.jones@utdallas.edu}
     \affiliation{%
         \institution{University of Texas at Dallas}
         \streetaddress{800 West Campbell Road}
@@ -24,11 +33,14 @@
         \postcode{75080}
         \country{USA}}
     
+    % The default list of authors is too long for headers}
+    \renewcommand{\shortauthors}{T. Duckworth and Z. Jones}
+    
     \maketitle
     
-    % The default list of authors is too long for headers}
-    \renewcommand{\shortauthors}{G. Zhou et al.}
-    
     \input{proposal_body}
+    
+    \bibliographystyle{ACM-Reference-Format}
+    \bibliography{proposal_refs} 
     
 \end{document}
