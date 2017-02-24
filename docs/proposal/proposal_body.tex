@@ -1,14 +1,57 @@
 \section{Problem Statement}
 
+Our first problem is to create a tool capable of instrumenting Java programs using Java Agent to collect coverage information for JUnit tests. We will refer to this tool as CoverageTool.
 
+Our second problem is to create a tool that will statically compute a set of metrics using ASM. We will refer to this tool as MetricsTool.
+
+We would like to be able to offer our project as a basis for future extension to tackle research problems with regards to software metrics.
 
 \section{Technique Discussion}
 
+\subsection{Instrumentation and Analysis}
 
+To disassemble and analyze target projects, we will use ASM and Java Agent.
+
+\subsection{Metrics of Interest}
+
+There are several metrics that we will be interested in  collecting. We plan to cover all metrics listed under the JHawk method metrics listing \cite{jhawkmetrics}, as well as some of the class metrics, and a couple of extra method metrics. Below, we speak to a selection of the metrics that may prove especially challenging or interesting.
+
+\subsubsection{Comments}
+
+It is unclear to us at this time how best to approach gathering metrics for comments. Since comments in the source code do not appear to be persisted into the bytecode at compilation time, it is unclear how ASM can be used to gather information on them (since it operates on bytecode). At this time, our research indicates that there are no bytecode instructions pertaining to comments 
+
+\subsubsection{Cyclomatic Complexity}
+
+This metric is constructed from the attributes of the program's control flow graph. Since the project only demands statement-level coverage at minimum, additional coverage analysis (in the form of branch-level coverage) may be necessary in order to determine this metric.
+
+\subsubsection{Classification}
+
+We are interested in also implementing simple heuristics to allow method classification for some level of statistical analysis. For example, identifying getters, setters, and constructors. We propose to also allow these heuristics to be extended by end users.
 
 \section{Implementation Plan}
+CoverageTool will be made to be run under Maven, for easy integration into existing projects. It will be able to output its results to the terminal or a file. If a project has an appropriately modified \texttt{pom.xml} file, then CoverageTool can be ran by using \texttt{mvn test}. A feature that we are considering is a script that will attempt to patch the relevant \texttt{pom.xml} file to include CoverageTool.
 
+MetricsTool will at the least have a command line tool, to ease its usage in scripts. We hope to be able to also create a GUI frontend, but we have concerns about the practicality of this in the given time period.
 
+Both tools will be written in Java, so as to be able to take advantage of Java's reflection tools to disassemble and instrument projects. They will also likely share some of their code. While they are planned to be separate tools, their output will be designed to be merged if the researcher desires.
 
 \section{Experimental Plan}
 
+\subsection{Source Project Selection}
+
+Ideally, the projects we select should have the following attributes:
+
+\begin{itemize}
+\item \textbf{Size} - We are required to have at least 1,000 Lines of Code per project. To help validate the tool, we would want to have at least two that are near this limit, to simplify initial testing.
+\item \textbf{Test Coverage} - We would like to have plenty of test coverage available on each project. In order to satisfy this attribute, we likely will start with an initial set of 15 projects under test, and narrow our scope to the ten with the best coverage.
+\item \textbf{Maturity} - To give us a good sample set, we would prefer mature, long running projects.
+\item \textbf{Type} - Generally, libraries and APIs will be easier to test than apps with GUIs. In particular, for the sake of automated testing, we would prefer projects that can run headless.
+\end{itemize}
+
+The following table shows our current list of test candidates.
+
+
+
+\subsection{Validation}
+
+To validate our work, we plan to compare our results to currently available tools such as SourceMeter. 
