@@ -5,3 +5,8 @@
 *.out
 *.pdf
 *.gz
+target/
+bin/
+.classpath
+.project
+.settings/
