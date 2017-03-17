@@ -11,3 +11,7 @@ I say the "instrumented version" because at first glance it looks like Java Agen
 `Instrumentation.redefineClasses()` can be used to supply new class definitions at runtime. The `Instrumentation` class has facilities for repeatedly "transforming" classes, but these are not what we need. Rather, we can take runtime bytecode, supply it to ASM for transformation, and use the resulting bytecode to create a new `ClassDefinition` with which we can redefine the runtime class.
 
 There may be a few issues with this. In JUnit, static data in a class persists between tests, so if the state of data in a *class* (not the objects instantiated during the setup of the test fixture) changes during one test, that same state will be available for use by the next test. If we transform entire classes as they are encountered during testing (including when static field accesses are made in the test itself, as opposed to just intercepting the first method call to an object of that type), this is no problem. If we want to optimize further by instrumenting at a method-level granularity, this may have implications depending on how transformations in ASM affect static data.
+
+List of useful classes/methods:
+
+* `Instrumentation.redefineClasses(ClassDefinition... definitions)`: Given `definitions`, (re)define the appropriate classes in the JVM.
