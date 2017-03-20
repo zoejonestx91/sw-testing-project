@@ -1,11 +1,13 @@
 package edu.utdallas.coveragetool.agent;
 
 import java.io.IOException;
+import java.lang.instrument.ClassDefinition;
 import java.lang.instrument.Instrumentation;
+import java.lang.instrument.UnmodifiableClassException;
 import java.util.HashSet;
 
 import org.objectweb.asm.ClassReader;
-
+import org.objectweb.asm.ClassWriter;
 import org.junit.runner.Description;
 import org.junit.runner.Result;
 import org.junit.runner.notification.RunListener;
@@ -50,7 +52,6 @@ public class UnitListener extends RunListener {
 		//
 		// When traversing the class, only instrument methods with annotation @Test and without annotation @Ignore.
 		
-		
 		ClassReader reader = null;
 		
 		try {
@@ -60,7 +61,25 @@ public class UnitListener extends RunListener {
 			System.exit(1);
 		}
 		
-		reader.accept(new UnitClassVisitor(), 0);
+		ClassWriter writer = new ClassWriter(reader, 0);
+		reader.accept(new UnitClassVisitor(writer), 0);
+		ClassDefinition def = null;
+		try {
+			def = new ClassDefinition(Class.forName(className), writer.toByteArray());
+		} catch (ClassNotFoundException e) {
+			System.err.println("Problem defining test class: " + e.getMessage());
+			System.exit(1);
+		}
+		
+		try {
+			inst.redefineClasses(def);
+		} catch (ClassNotFoundException e) {
+			System.err.println("Problem finding class for redefinition: " + e.getMessage());
+			System.exit(1);
+		} catch (UnmodifiableClassException e) {
+			System.err.println("Could not modify class during redefinition: " + e.getMessage());
+			System.exit(1);
+		}
 	}
 	
 //	public void testRunStarted(Description description) throws Exception {

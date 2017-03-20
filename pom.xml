@@ -50,6 +50,8 @@
 		  <archive>
 		    <manifestEntries>
 			  <Premain-Class>edu.utdallas.coveragetool.agent.Agent</Premain-Class>
+			  <Can-Redefine-Classes>true</Can-Redefine-Classes>
+			  <Can-Retransform-Classes>true</Can-Retransform-Classes>
 			</manifestEntries>
 		  </archive>
 		</configuration>

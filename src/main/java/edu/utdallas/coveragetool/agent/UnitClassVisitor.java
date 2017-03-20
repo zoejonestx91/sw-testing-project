@@ -4,11 +4,7 @@ import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
-public class UnitClassVisitor extends ClassVisitor implements Opcodes {
-	public UnitClassVisitor() {
-		super(ASM5);
-	}
-	
+public class UnitClassVisitor extends ClassVisitor implements Opcodes {	
     public UnitClassVisitor(final ClassVisitor cv) {
         super(ASM5, cv);
     }
