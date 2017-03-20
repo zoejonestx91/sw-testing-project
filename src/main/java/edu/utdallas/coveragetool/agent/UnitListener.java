@@ -1,7 +1,10 @@
 package edu.utdallas.coveragetool.agent;
 
+import java.io.IOException;
 import java.lang.instrument.Instrumentation;
 import java.util.HashSet;
+
+import org.objectweb.asm.ClassReader;
 
 import org.junit.runner.Description;
 import org.junit.runner.Result;
@@ -26,9 +29,9 @@ public class UnitListener extends RunListener {
 	// Checks test class and instruments it if necessary
 	public void testStarted(Description description) {
 		String testClass = description.getClassName();
-        if (!instTestClasses.contains(testClass)) {
+//        if (!instTestClasses.contains(testClass)) {
         	instrumentTestClass(testClass);
-        }
+//        }
     }
 	
 	// When testing is complete, write the coverage information
@@ -44,6 +47,20 @@ public class UnitListener extends RunListener {
 		// This should be easily done by having the user code call a "coverage output" function in this class (UnitListener), which
 		// can unite the current context as set by the test case with the coverage information being collected by instrumentation
 		// in the user code.
+		//
+		// When traversing the class, only instrument methods with annotation @Test and without annotation @Ignore.
+		
+		
+		ClassReader reader = null;
+		
+		try {
+			reader = new ClassReader(className);
+		} catch (IOException e) {
+			System.err.println("Problem reading test class for instrumenting: " + e.getMessage());
+			System.exit(1);
+		}
+		
+		reader.accept(new UnitClassVisitor(), 0);
 	}
 	
 //	public void testRunStarted(Description description) throws Exception {

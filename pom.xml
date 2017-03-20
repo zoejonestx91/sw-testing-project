@@ -20,6 +20,11 @@
       <version>4.12</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+    	<groupId>org.ow2.asm</groupId>
+    	<artifactId>asm-all</artifactId>
+    	<version>5.2</version>
+    </dependency>
   </dependencies>
   <description>This tool augments JUnit tests by producing a file documenting line coverage for individual JUnit test cases.</description>
 

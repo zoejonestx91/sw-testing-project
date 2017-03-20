@@ -15,5 +15,13 @@ public class ATest {
 	public void sumTest() {
 		assertEquals(11, new A().sum(5, 6));
 	}
+	
+	class C {
+		
+	}
 
+}
+
+class B {
+	
 }
