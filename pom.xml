@@ -17,9 +17,45 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>3.8.1</version>
+      <version>4.12</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+    	<groupId>org.ow2.asm</groupId>
+    	<artifactId>asm-all</artifactId>
+    	<version>5.2</version>
     </dependency>
   </dependencies>
   <description>This tool augments JUnit tests by producing a file documenting line coverage for individual JUnit test cases.</description>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <argLine>-javaagent:${project.build.directory}/${project.artifactId}-${project.version}.jar</argLine>
+          <properties>
+            <property>
+              <name>listener</name>
+              <value>edu.utdallas.coveragetool.agent.UnitListener</value>
+            </property>
+          </properties>
+        </configuration>
+      </plugin>
+      <plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-jar-plugin</artifactId>
+		<configuration>
+		  <archive>
+		    <manifestEntries>
+			  <Premain-Class>edu.utdallas.coveragetool.agent.Agent</Premain-Class>
+			  <Can-Redefine-Classes>true</Can-Redefine-Classes>
+			  <Can-Retransform-Classes>true</Can-Retransform-Classes>
+			</manifestEntries>
+		  </archive>
+		</configuration>
+	</plugin>
+    </plugins>
+  </build>
 </project>
