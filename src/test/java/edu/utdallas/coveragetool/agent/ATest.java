@@ -5,13 +5,15 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-public class InstrumentationTest {
+public class ATest {
+
 	@Before
 	public void setUp() throws Exception {
 	}
-	
+
 	@Test
-	public void instrumentationReceived() {
-		assertNotNull(UnitListener.getInst());
+	public void sumTest() {
+		assertEquals(11, new A().sum(5, 6));
 	}
+
 }
