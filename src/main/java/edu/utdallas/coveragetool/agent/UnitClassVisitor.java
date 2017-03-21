@@ -5,8 +5,11 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
 public class UnitClassVisitor extends ClassVisitor implements Opcodes {	
-    public UnitClassVisitor(final ClassVisitor cv) {
+	String className;
+	
+    public UnitClassVisitor(final ClassVisitor cv, String className) {
         super(ASM5, cv);
+        this.className = className;
     }
 
     @Override
