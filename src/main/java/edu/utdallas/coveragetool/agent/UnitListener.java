@@ -29,14 +29,11 @@ public class UnitListener extends RunListener {
 		return inst;
 	}
 	
-	// Checks test class and instruments it if necessary
-	public void testStarted(Description description) {
-		String testClass = description.getClassName();
-        if (!instTestClasses.contains(testClass)) {
-        	instTestClasses.add(testClass);
-        	instrumentTestClass(testClass);
-        }
-    }
+	public void testRunStarted(Description description) {
+		for (Description child : description.getChildren()) {
+			instrumentTestClass(child.toString());
+		}
+	}
 	
 	// When testing is complete, write the coverage information
 	public void testRunFinished(Result result) {
@@ -45,6 +42,7 @@ public class UnitListener extends RunListener {
 	
 	// Inserts instrumentation into the specified TEST class
 	private static void instrumentTestClass(String className) {
+		System.err.println(className);
 		ClassFileTransformer transformer = new UnitTransformer(className);
 		inst.addTransformer(transformer, true);
 		try {

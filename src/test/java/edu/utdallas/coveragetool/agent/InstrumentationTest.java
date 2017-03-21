@@ -12,6 +12,7 @@ public class InstrumentationTest {
 	
 	@Test
 	public void instrumentationReceived() {
+//		assertEquals(new A().sum(3, 4), 7);
 		assertNotNull(UnitListener.getInst());
 	}
 }
