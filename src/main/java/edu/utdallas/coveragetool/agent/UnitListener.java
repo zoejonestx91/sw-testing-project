@@ -1,14 +1,9 @@
 package edu.utdallas.coveragetool.agent;
 
-import java.io.IOException;
-import java.lang.instrument.ClassDefinition;
-import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
 import java.lang.instrument.UnmodifiableClassException;
 import java.util.HashSet;
 
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassWriter;
 import org.junit.runner.Description;
 import org.junit.runner.Result;
 import org.junit.runner.notification.RunListener;
@@ -42,8 +37,7 @@ public class UnitListener extends RunListener {
 	
 	// Inserts instrumentation into the specified TEST class
 	private static void instrumentTestClass(String className) {
-		System.err.println(className);
-		ClassFileTransformer transformer = new UnitTransformer(className);
+		UnitTransformer transformer = new UnitTransformer(className);
 		inst.addTransformer(transformer, true);
 		try {
 			inst.retransformClasses(Class.forName(className));
