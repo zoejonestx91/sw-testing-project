@@ -1,4 +1,4 @@
-package edu.utdallas.coveragetool.agent;
+package edu.utdallas.coveragetool.test;
 
 class A {
 	public static int count = 0;

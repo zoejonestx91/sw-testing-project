@@ -1,4 +1,4 @@
-package edu.utdallas.coveragetool.agent;
+package edu.utdallas.coveragetool.test;
 
 import static org.junit.Assert.*;
 
