@@ -19,6 +19,7 @@ public class UCTransformer implements ClassFileTransformer {
 							ProtectionDomain protectionDomain,
 							byte[] classfileBuffer)
 			throws IllegalClassFormatException {
+		// TODO: Parameterize this for general use
 		if (className.indexOf("edu/utdallas/coveragetool/test") == 0) {
 			ClassReader reader = new ClassReader(classfileBuffer);
 			ClassWriter writer = new ClassWriter(reader, 0);
