@@ -20,7 +20,7 @@ public class UnitMethodVisitor extends MethodVisitor implements Opcodes {
 	public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
 		if (desc.equals("Lorg/junit/Test;"))
 			this.isTest = true;
-		else if (desc.equals("Lorg/junit/Ignore;"))
+		if (desc.equals("Lorg/junit/Ignore;"))
 			this.isIgnored = true;
 		return super.visitAnnotation(desc, visible);
 	}
