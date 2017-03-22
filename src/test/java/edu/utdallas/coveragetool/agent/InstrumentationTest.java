@@ -10,7 +10,7 @@ public class InstrumentationTest {
 	public void setUp() throws Exception {
 	}
 	
-	@Test
+	@Test (timeout = 100)
 	public void instrumentationReceived() {
 		assertEquals(7,7);
 		assertNotNull(new A());

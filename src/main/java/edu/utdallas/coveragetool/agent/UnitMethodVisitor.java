@@ -26,17 +26,17 @@ public class UnitMethodVisitor extends MethodVisitor implements Opcodes {
 	}
 	
 	@Override
-    public void visitCode(){
+	public void visitMethodInsn(int opcode,
+            String owner,
+            String name,
+            String desc,
+            boolean itf) {
 		// We don't instrument methods unless they're tests and not ignored
 		if (!isTest || isIgnored) {
-			super.visitCode();
+			super.visitMethodInsn(opcode, owner, name, desc, itf);
 			return;
 		}
 		
-    	mv.visitFieldInsn(GETSTATIC, "java/lang/System", "err", "Ljava/io/PrintStream;");
-    	mv.visitLdcInsn(mName+" executed");
-    	mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
-    	
 		// TODO: the actual test instrumentation
 		// Will require instrumenting tests to configure the current testing "context" (i.e. the current test class and test name,
 		// per the output specification) so that instrumented user code will write coverage information specific to that test case.
@@ -44,6 +44,11 @@ public class UnitMethodVisitor extends MethodVisitor implements Opcodes {
 		// can unite the current context as set by the test case with the coverage information being collected by instrumentation
 		// in the user code.
 		
-    	super.visitCode();
-    }
+		// This causes verify errors?
+    	mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
+    	mv.visitLdcInsn(mName+" executed");
+    	mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
+		
+		super.visitMethodInsn(opcode, owner, name, desc, itf);
+	}
 }
