@@ -24,11 +24,11 @@ public class UCTransformer implements ClassFileTransformer {
 			ClassWriter writer = new ClassWriter(reader, 0);
 			reader.accept(new UCClassVisitor(writer, className), 0);
 			
-			try {
-				IOUtils.write(writer.toByteArray(), new FileOutputStream(className.replace('/', '_') + ".class"));
-			} catch (FileNotFoundException e) {
-			} catch (IOException e) {
-			}
+//			try {
+//				IOUtils.write(writer.toByteArray(), new FileOutputStream(className.replace('/', '_') + ".class"));
+//			} catch (FileNotFoundException e) {
+//			} catch (IOException e) {
+//			}
 			
 			return writer.toByteArray();
 		} else {
