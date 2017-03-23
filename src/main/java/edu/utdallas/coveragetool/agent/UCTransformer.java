@@ -20,7 +20,7 @@ public class UCTransformer implements ClassFileTransformer {
 							byte[] classfileBuffer)
 			throws IllegalClassFormatException {
 		// TODO: Parameterize this for general use
-		if (className.contains("edu/utdallas/coveragetool/test")) {
+		if (className.contains("edu/utdallas/coveragetool/test/classes")) {
 			ClassReader reader = new ClassReader(classfileBuffer);
 			ClassWriter writer = new ClassWriter(reader, ClassWriter.COMPUTE_MAXS);
 			reader.accept(new UCClassVisitor(writer, className), 0);
