@@ -1,5 +1,5 @@
-package edu.utdallas.coveragetool;
-
+package edu.utdallas.coveragetool.record;
+import edu.utdallas.coveragetool.record.ClassRecord;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -29,6 +29,10 @@ public class TestRecord implements Comparable<TestRecord> {
 
     public String getTestName() {
         return testName;
+    }
+
+    public Set<ClassRecord> getClassRecords() {
+        return classRecords;
     }
 
     public void setTestName(String testName) {

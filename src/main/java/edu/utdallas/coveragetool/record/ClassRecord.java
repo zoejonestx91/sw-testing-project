@@ -1,4 +1,4 @@
-package edu.utdallas.coveragetool;
+package edu.utdallas.coveragetool.record;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -10,6 +10,10 @@ import java.util.TreeSet;
 public class ClassRecord implements Comparable<ClassRecord> {
     String className;
     Set<Integer> lineRecords = new TreeSet<Integer>();
+
+    public Set<Integer> getLineRecords() {
+        return lineRecords;
+    }
 
     public ClassRecord(String className) {
         this.className = className;
