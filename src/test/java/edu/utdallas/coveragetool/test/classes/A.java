@@ -1,6 +1,6 @@
-package edu.utdallas.coveragetool.test;
+package edu.utdallas.coveragetool.test.classes;
 
-class A {
+public class A {
 	public static int count = 0;
 	
 	public int sum(int a, int b) {

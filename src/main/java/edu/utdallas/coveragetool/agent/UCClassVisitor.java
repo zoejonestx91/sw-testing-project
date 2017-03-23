@@ -16,6 +16,6 @@ public class UCClassVisitor extends ClassVisitor implements Opcodes {
     public MethodVisitor visitMethod(final int access, final String name,
             final String desc, final String signature, final String[] exceptions) {
         MethodVisitor mv = cv.visitMethod(access, name, desc, signature, exceptions);
-        return mv == null ? null : new UCMethodVisitor(mv, name);
+        return mv == null ? null : new UCMethodVisitor(mv, name, className);
     }
 }
