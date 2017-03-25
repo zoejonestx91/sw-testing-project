@@ -4,9 +4,11 @@ import java.lang.instrument.Instrumentation;
 import java.util.ArrayList;
 import java.util.List;
 
-// Options and arguments should be comment delimited
+// Options and arguments should be comma delimited
+//
 // --writebytecode |
 // -b              | write modified bytecode to files named after the class
+//
 // Other arguments will be interpreted as class names or packages (for which
 // class names containing the package name will be included) that should be
 // instrumented.
