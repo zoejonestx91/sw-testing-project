@@ -7,4 +7,18 @@ public class A {
 		count ++;
 		return a + b;
 	}
+	
+	public int switchMeth(int x, int y) {
+		switch (x) {
+			case 0: return x + y;
+			case 1: return x;
+			case 2: return y;
+			case 3: x += 1; break;
+			case 4: y += 1;
+			case 5: break;
+			case 6: x += 1; y += 1;
+			default: return x + y + 1;
+		}
+		return x - y;
+	}
 }

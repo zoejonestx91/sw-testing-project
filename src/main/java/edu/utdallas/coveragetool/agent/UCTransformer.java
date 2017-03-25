@@ -13,6 +13,8 @@ import org.objectweb.asm.ClassWriter;
 
 public class UCTransformer implements ClassFileTransformer {
 	
+	public static boolean writeClasses = false;
+	
 	public byte[] transform(ClassLoader loader,
 							String className,
 							Class<?> classBeingRedefined,
@@ -22,14 +24,16 @@ public class UCTransformer implements ClassFileTransformer {
 		// TODO: Parameterize this for general use
 		if (className.contains("edu/utdallas/coveragetool/test/classes")) {
 			ClassReader reader = new ClassReader(classfileBuffer);
-			ClassWriter writer = new ClassWriter(reader, ClassWriter.COMPUTE_MAXS);
+			ClassWriter writer = new ClassWriter(reader, ClassWriter.COMPUTE_FRAMES);
 			reader.accept(new UCClassVisitor(writer, className), 0);
 			
-//			try {
-//				IOUtils.write(writer.toByteArray(), new FileOutputStream(className.replace('/', '_') + ".class"));
-//			} catch (FileNotFoundException e) {
-//			} catch (IOException e) {
-//			}
+			if (writeClasses) {
+				try {
+					IOUtils.write(writer.toByteArray(), new FileOutputStream(className.replace('/', '_') + ".class"));
+				} catch (FileNotFoundException e) {
+				} catch (IOException e) {
+				}
+			}
 			
 			return writer.toByteArray();
 		} else {

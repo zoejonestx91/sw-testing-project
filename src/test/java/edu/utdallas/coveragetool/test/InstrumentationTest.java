@@ -3,6 +3,7 @@ package edu.utdallas.coveragetool.test;
 import static org.junit.Assert.*;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import edu.utdallas.coveragetool.test.classes.A;
@@ -12,7 +13,7 @@ public class InstrumentationTest {
 	public void setUp() throws Exception {
 	}
 	
-	@Test
+	@Test @Ignore
 	public void instrumentationReceived() {
 		assertEquals(7,7);
 		assertNotNull(new A());
