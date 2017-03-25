@@ -1,20 +1,34 @@
 package edu.utdallas.coveragetool.agent;
 
 import java.lang.instrument.Instrumentation;
+import java.util.ArrayList;
+import java.util.List;
 
+// Options and arguments should be comment delimited
+// --writebytecode |
+// -b              | write modified bytecode to files named after the class
+// Other arguments will be interpreted as class names or packages (for which
+// class names containing the package name will be included) that should be
+// instrumented.
 public class Agent {
+	private static List<String> paths;
+	private static UCTransformer transform;
+	
     public static void premain(String agentArgs, Instrumentation inst) {
+    	paths = new ArrayList<String>();
     	if (agentArgs != null)
 	    	for (String s : agentArgs.split(","))
-	    		option(s);
-    	UCTransformer transform = new UCTransformer();
+	    		argHandler(s);
+    	transform = new UCTransformer();
+    	transform.classesToInstrument = paths.toArray(new String[paths.size()]);
         inst.addTransformer(transform);
     }
     
-    public static void option(String option) {
-    	switch (option) {
-    		case "writeclasses":
-    		case "wc": UCTransformer.writeClasses = true; break;
+    public static void argHandler(String arg) {
+    	switch (arg) {
+    		case "--writebytecode":
+    		case "-b": transform.writeClasses = true; break;
+    		default: paths.add(arg.replace('.', '/'));
     	}
     }
 }

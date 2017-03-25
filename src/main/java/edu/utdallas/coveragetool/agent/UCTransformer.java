@@ -13,7 +13,8 @@ import org.objectweb.asm.ClassWriter;
 
 public class UCTransformer implements ClassFileTransformer {
 	
-	public static boolean writeClasses = false;
+	public boolean writeClasses = false;
+	public String[] classesToInstrument = null;
 	
 	public byte[] transform(ClassLoader loader,
 							String className,
@@ -21,8 +22,7 @@ public class UCTransformer implements ClassFileTransformer {
 							ProtectionDomain protectionDomain,
 							byte[] classfileBuffer)
 			throws IllegalClassFormatException {
-		// TODO: Parameterize this for general use
-		if (className.contains("edu/utdallas/coveragetool/test/classes")) {
+		if (classToInstrument(className)) {
 			ClassReader reader = new ClassReader(classfileBuffer);
 			ClassWriter writer = new ClassWriter(reader, ClassWriter.COMPUTE_FRAMES);
 			reader.accept(new UCClassVisitor(writer, className), 0);
@@ -39,6 +39,16 @@ public class UCTransformer implements ClassFileTransformer {
 		} else {
 			return null;
 		}
+	}
+	
+	public boolean classToInstrument(String className) {
+		if (classesToInstrument == null)
+			return false;
+		for (String s : classesToInstrument) {
+			if (className.indexOf(s) >= 0)
+				return true;
+		}
+		return false;
 	}
 	
 }
