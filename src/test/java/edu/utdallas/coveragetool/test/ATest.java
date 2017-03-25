@@ -17,7 +17,7 @@ public class ATest {
 		tester = new A();
 	}
 
-	@Test @Ignore
+	@Test
 	public void sumTest() {
 		assertEquals(11, tester.sum(5, 6));
 	}

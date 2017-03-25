@@ -2,6 +2,15 @@ package edu.utdallas.coveragetool.test.classes;
 
 public class A {
 	public static int count = 0;
+	public int sums;
+	
+	public A(int sums) {
+		this.sums = sums;
+	}
+	
+	public A() {
+		super();
+	}
 	
 	public int sum(int a, int b) {
 		count ++;

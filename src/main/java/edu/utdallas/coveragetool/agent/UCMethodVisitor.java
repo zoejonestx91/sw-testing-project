@@ -29,8 +29,9 @@ public class UCMethodVisitor extends MethodVisitor implements Opcodes {
 		super.visitLabel(label);
 	}
 	
+	// Invokes the main coverage function given a class name and line number
 	private void mvStmtCover() {
-		if (line != 0) {
+		if (line > 0) {
 			mv.visitLdcInsn(cName);
 			mv.visitIntInsn(SIPUSH, line);
 			mv.visitMethodInsn(INVOKESTATIC, "edu/utdallas/coveragetool/agent/UnitListener", "stmtCover", "(Ljava/lang/String;I)V", false);

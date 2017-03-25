@@ -18,6 +18,7 @@ public class UnitListener extends RunListener {
 	
 	public void testStarted(Description description) {
 		currentTest = description.getClassName() + ':' + description.getMethodName();
+		System.out.println("Running: " + currentTest);
 	}
 	
 	public static void stmtCover(String className, int line) {
