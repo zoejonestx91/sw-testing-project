@@ -8,9 +8,7 @@ public class A {
 		this.sums = sums;
 	}
 	
-	public A() {
-		super();
-	}
+	public A() {}
 	
 	public int sum(int a, int b) {
 		count ++;

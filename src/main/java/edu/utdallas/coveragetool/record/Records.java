@@ -39,8 +39,9 @@ public class Records {
     static void writeTestRecords() throws IOException {
         for (TestRecord testRecord: testRecords) {
             write(PREAMBLE);
+            write(" ");
             write(testRecord.getTestName());
-            write("\n");
+            write("\r\n");
             writeClassRecords(testRecord);
         }
     }
@@ -55,7 +56,7 @@ public class Records {
     static void writeLines(ClassRecord classRecord) throws IOException {
         String className = classRecord.getClassName();
         for(Integer lineNum: classRecord.getLineRecords()){
-            write(className+":"+lineNum+"\n");
+            write(className+":"+lineNum+"\r\n");
         }
     }
 

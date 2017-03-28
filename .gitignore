@@ -11,3 +11,4 @@ bin/
 .project
 .settings/
 *.class
+stmt-cov.txt

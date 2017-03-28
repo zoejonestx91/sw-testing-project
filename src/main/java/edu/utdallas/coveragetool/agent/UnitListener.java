@@ -1,27 +1,25 @@
 package edu.utdallas.coveragetool.agent;
 
-import java.lang.instrument.Instrumentation;
-import java.lang.instrument.UnmodifiableClassException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.io.IOException;
 
 import org.junit.runner.Description;
 import org.junit.runner.Result;
 import org.junit.runner.notification.RunListener;
 
-import edu.utdallas.coveragetool.record.ClassRecord;
+import edu.utdallas.coveragetool.record.Records;
 
 public class UnitListener extends RunListener {
-	String currentTest;
-	Map<String, ClassRecord> classes;
+	private static String test = "";
 	
 	public void testStarted(Description description) {
-		currentTest = description.getClassName() + ':' + description.getMethodName();
-		System.out.println("Running: " + currentTest);
+		test = description.getClassName() + ':' + description.getMethodName();
+	}
+	
+	public void testRunFinished(Result result) throws IOException {
+		Records.writeout();
 	}
 	
 	public static void stmtCover(String className, int line) {
-		System.err.println(className + " - " + line);
+		Records.addTestRecord(test).addClassRecord(className.replace('/', '.')).addLine(line);
 	}
 }

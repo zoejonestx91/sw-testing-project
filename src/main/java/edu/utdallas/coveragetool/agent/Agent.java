@@ -18,10 +18,10 @@ public class Agent {
 	
     public static void premain(String agentArgs, Instrumentation inst) {
     	paths = new ArrayList<String>();
+    	transform = new UCTransformer();
     	if (agentArgs != null)
 	    	for (String s : agentArgs.split(","))
 	    		argHandler(s);
-    	transform = new UCTransformer();
     	transform.classesToInstrument = paths.toArray(new String[paths.size()]);
         inst.addTransformer(transform);
     }

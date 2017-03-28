@@ -23,7 +23,7 @@ public class TestRecord implements Comparable<TestRecord> {
             classRecordMap.put(className, candidate);
             return candidate;
         } else {
-            return classRecordMap.get(testName);
+            return classRecordMap.get(className);
         }
     }
 
