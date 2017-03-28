@@ -26,7 +26,7 @@ public class UnitListener extends RunListener {
 	}
 	
 	public static void stmtCover(String className, int line) {
-		Records.addTestRecord(test).addClassRecord(condMap(className)).addLine(line);
+		Records.addTestRecord(test).addClassRecord(condMap(className.replace('/', '.'))).addLine(line);
 	}
 	
 	public static int condMap(String name) {
