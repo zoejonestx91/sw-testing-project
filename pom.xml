@@ -4,7 +4,7 @@
 
   <groupId>edu.utdallas.coveragetool</groupId>
   <artifactId>coveragetool</artifactId>
-  <version>0.2-SNAPSHOT</version>
+  <version>1.0</version>
   <packaging>jar</packaging>
 
   <name>coveragetool</name>
