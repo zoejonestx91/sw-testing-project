@@ -8,26 +8,26 @@ import java.util.TreeSet;
  * Created by z on 3/20/17.
  */
 public class ClassRecord implements Comparable<ClassRecord> {
-    String className;
+    Integer classId;
     Set<Integer> lineRecords = new TreeSet<Integer>();
 
     public Set<Integer> getLineRecords() {
         return lineRecords;
     }
 
-    public ClassRecord(String className) {
-        this.className = className;
+    public ClassRecord(Integer classId) {
+        this.classId = classId;
     }
 
     public void addLine(int line){
         lineRecords.add(line);
     }
 
-    public String getClassName() {
-        return className;
+    public Integer getClassName() {
+        return classId;
     }
 
     public int compareTo(ClassRecord o) {
-        return className.compareTo(o.getClassName());
+        return classId.compareTo(o.getClassName());
     }
 }

@@ -9,37 +9,37 @@ import java.util.TreeSet;
  * Created by z on 3/20/17.
  */
 public class TestRecord implements Comparable<TestRecord> {
-    String testName;
+    Integer testId;
     private Set<ClassRecord> classRecords = new TreeSet<ClassRecord>();
-    private Map<String, ClassRecord> classRecordMap = new HashMap<String, ClassRecord>();
+    private Map<Integer, ClassRecord> classRecordMap = new HashMap<Integer, ClassRecord>();
 
-    public TestRecord(String testName) {
-        this.testName = testName;
+    public TestRecord(Integer testId) {
+        this.testId = testId;
     }
 
-    public ClassRecord addClassRecord(String className){
-        ClassRecord candidate = new ClassRecord(className);
+    public ClassRecord addClassRecord(Integer classId){
+        ClassRecord candidate = new ClassRecord(classId);
         if(classRecords.add(candidate)){
-            classRecordMap.put(className, candidate);
+            classRecordMap.put(classId, candidate);
             return candidate;
         } else {
-            return classRecordMap.get(className);
+            return classRecordMap.get(classId);
         }
     }
 
-    public String getTestName() {
-        return testName;
+    public Integer getTestName() {
+        return testId;
     }
 
     public Set<ClassRecord> getClassRecords() {
         return classRecords;
     }
 
-    public void setTestName(String testName) {
-        this.testName = testName;
+    public void setTestName(Integer testId) {
+        this.testId = testId;
     }
 
     public int compareTo(TestRecord that) {
-        return testName.compareTo(that.getTestName());
+        return testId.compareTo(that.getTestName());
     }
 }
