@@ -43,6 +43,7 @@ public class Records {
             	continue;
             write(PREAMBLE);
             write(" ");
+            write(name);
             write("\r\n");
             writeClassRecords(testRecord, idMap);
         }
