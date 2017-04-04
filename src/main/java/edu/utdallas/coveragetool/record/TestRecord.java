@@ -16,19 +16,16 @@ import java.util.TreeSet;
  */
 public class TestRecord implements Comparable<TestRecord> {
     String testName;
-    ArrayList<Integer> classCoverage;
     ArrayList<ArrayList<Integer>> coverage;
     
     static BufferedOutputStream out;
 
     public TestRecord(String testId) {
         this.testName = testId;
-        this.classCoverage = new ArrayList<Integer>();
         this.coverage = new ArrayList<ArrayList<Integer>>();
     }
     
     public void cover(int classId, int line) {
-    	coverClass(classId);
     	while (classId >= coverage.size())
     		coverage.add(new ArrayList<Integer>());
     	ArrayList<Integer> lines = coverage.get(classId);
@@ -37,27 +34,6 @@ public class TestRecord implements Comparable<TestRecord> {
     	while (index >= lines.size())
     		lines.add(0);
     	lines.set(index, lines.get(index) | (1 << subindex));
-    }
-    
-    private boolean classCovered(int id) {
-    	int index = id / 32;
-    	int subindex = id % 32;
-    	try {
-    		int x = classCoverage.get(index) & (1 << subindex);
-    		if (x != 0)
-    			return true;
-    		return false;
-    	} catch (IndexOutOfBoundsException e) {
-    		return false;
-    	}
-    }
-    
-    private void coverClass(int id) {
-    	int index = id / 32;
-    	int subindex = id % 32;
-    	while (index >= classCoverage.size())
-    		classCoverage.add(0);
-    	classCoverage.set(index, classCoverage.get(index) | (1 << subindex));
     }
 
     public String getTestName() {
@@ -75,8 +51,6 @@ public class TestRecord implements Comparable<TestRecord> {
     public void writeClassRecords(BufferedOutputStream out, int[] order, String[] classNames) throws IOException {
     	this.out = out;
     	for (int i = 0; i < order.length; i ++) {
-    		if (!classCovered(order[i]))
-    			continue;
     		ArrayList<Integer> classLines;
     		try {
     			classLines = coverage.get(order[i]);
