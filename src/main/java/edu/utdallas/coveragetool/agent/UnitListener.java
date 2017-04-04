@@ -18,14 +18,15 @@ import edu.utdallas.coveragetool.record.Records;
 import edu.utdallas.coveragetool.record.TestRecord;
 
 public class UnitListener extends RunListener {
-	public static int maxClasses = 350;
-	static int maxTests = 4500;
-	public static int maxLines = 3000;
+	public final static int maxClasses = 503;
+	static int maxTests = 0;
+	public final static int maxLines = 2676;
 	
 	static int numClasses = 0;
 	static int numTests = 0;
 	
 	static TestRecord currentRecord;
+	public static long[][] currentCoverage;
 	static TestRecord[] tests;
 	static ClassRecord[] classes;
 	
@@ -36,7 +37,7 @@ public class UnitListener extends RunListener {
 	
 	public static void init() {
 		currentRecord = new TestRecord(null);
-		tests = new TestRecord[maxTests];
+		currentCoverage = currentRecord.coverage;
 		classes = new ClassRecord[maxClasses];
 	}
 	
@@ -47,8 +48,14 @@ public class UnitListener extends RunListener {
 	
 	public void testStarted(Description description) {
 		currentRecord = new TestRecord(description.getClassName() + ':' + description.getMethodName());
+		currentCoverage = currentRecord.coverage;
 		tests[numTests] = currentRecord;
 		numTests++;
+	}
+	
+	public void testRunStarted(Description description) {
+		maxTests = description.testCount();
+		tests = new TestRecord[maxTests];
 	}
 	
 	public void testRunFinished(Result result) throws IOException {
@@ -56,7 +63,13 @@ public class UnitListener extends RunListener {
 	}
 	
 	public static void stmtCover(int classId, int line) {
-		currentRecord.cover(classId, line);
+//		currentRecord.cover(classId, line);
+//		currentCoverage[classId][line / 64] = currentCoverage[classId][line / 64] | (1 << (line % 64));
+		
+		// classId = 1111
+		// line / 64 = 2222
+		// 1 << (line % 64) = 3333
+		currentCoverage[1111][2222] = currentCoverage[1111][2222] | 3333;
 	}
 	
 	private static void writeout() throws IOException {
@@ -67,7 +80,7 @@ public class UnitListener extends RunListener {
     }
 	
     private static void writeTestRecords() throws IOException {
-    	TestRecord[] records = Arrays.copyOf(tests, numTests);
+    	TestRecord[] records = tests;
     	Arrays.sort(records);
         for (int i = 0; i < records.length; i ++) {
             String name = records[i].getTestName();

@@ -16,20 +16,18 @@ import java.util.TreeSet;
  */
 public class TestRecord implements Comparable<TestRecord> {
     String testName;
-    int[][] coverage;
+    public long[][] coverage;
+    public final static byte WORD_SIZE = 64;
     
     static BufferedOutputStream out;
 
     public TestRecord(String testId) {
         this.testName = testId;
-        this.coverage = new int[UnitListener.maxClasses][UnitListener.maxLines / 32 + 1];
+        this.coverage = new long[UnitListener.maxClasses][UnitListener.maxLines / WORD_SIZE + 1];
     }
     
     public void cover(int classId, int line) {
-    	int[] lines = coverage[classId];
-    	int index = line / 32;
-    	int subindex = line % 32;
-    	lines[index] = lines[index] | (1 << subindex);
+    	coverage[classId][line / WORD_SIZE] = coverage[classId][line / WORD_SIZE] | (1 << (line % WORD_SIZE));
     }
 
     public String getTestName() {
@@ -47,21 +45,21 @@ public class TestRecord implements Comparable<TestRecord> {
     public void writeClassRecords(BufferedOutputStream out, int[] order, String[] classNames) throws IOException {
     	this.out = out;
     	for (int i = 0; i < order.length; i ++) {
-    		int[] classLines;
+    		long[] classLines;
     		try {
     			classLines = coverage[order[i]];
     		} catch (IndexOutOfBoundsException e) {
     			continue;
     		}
     		for (int j = 0; j < classLines.length; j ++) {
-    			int x = classLines[j];
+    			long x = classLines[j];
     			if (x == 0)
     				continue;
-    			for (int k = 0; k < 32; k ++) {
+    			for (byte k = 0; k < WORD_SIZE; k ++) {
     				if ((x & (1 << k)) != 0) {
     					write(classNames[i]);
     					write(":");
-    					write(Integer.toString(j * 32 + k));
+    					write(Integer.toString(j * WORD_SIZE + k));
     					write("\r\n");
     				}
     			}

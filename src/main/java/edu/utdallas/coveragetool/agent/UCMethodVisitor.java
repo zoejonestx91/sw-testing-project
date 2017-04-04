@@ -4,6 +4,8 @@ import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+import edu.utdallas.coveragetool.record.TestRecord;
+
 public class UCMethodVisitor extends MethodVisitor implements Opcodes {
 	String mName;
 	int cId;
@@ -32,9 +34,22 @@ public class UCMethodVisitor extends MethodVisitor implements Opcodes {
 	// Invokes the main coverage function given a class name and line number
 	private void mvStmtCover() {
 		if (line > 0) {
+//			mv.visitIntInsn(SIPUSH, cId);
+//			mv.visitIntInsn(SIPUSH, line);
+//			mv.visitMethodInsn(INVOKESTATIC, "edu/utdallas/coveragetool/agent/UnitListener", "stmtCover", "(II)V", false);
+			
+			mv.visitFieldInsn(GETSTATIC, "edu/utdallas/coveragetool/agent/UnitListener", "currentCoverage", "[[J");
 			mv.visitIntInsn(SIPUSH, cId);
-			mv.visitIntInsn(SIPUSH, line);
-			mv.visitMethodInsn(INVOKESTATIC, "edu/utdallas/coveragetool/agent/UnitListener", "stmtCover", "(II)V", false);
+			mv.visitInsn(AALOAD);
+			mv.visitIntInsn(SIPUSH, line / 64);
+			mv.visitFieldInsn(GETSTATIC, "edu/utdallas/coveragetool/agent/UnitListener", "currentCoverage", "[[J");
+			mv.visitIntInsn(SIPUSH, cId);
+			mv.visitInsn(AALOAD);
+			mv.visitIntInsn(SIPUSH, line / 64);
+			mv.visitInsn(LALOAD);
+			mv.visitLdcInsn(new Long(1 << (line % 64)));
+			mv.visitInsn(LOR);
+			mv.visitInsn(LASTORE);
 		}
 	}
 }
