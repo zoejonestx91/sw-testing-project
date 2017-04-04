@@ -16,20 +16,48 @@ import java.util.TreeSet;
  */
 public class TestRecord implements Comparable<TestRecord> {
     String testName;
-    HashMap<Integer, ClassRecord> coverage;
+    ArrayList<Integer> classCoverage;
+    ArrayList<ArrayList<Integer>> coverage;
+    
+    static BufferedOutputStream out;
 
     public TestRecord(String testId) {
         this.testName = testId;
-        this.coverage = new HashMap<Integer, ClassRecord>();
+        this.classCoverage = new ArrayList<Integer>();
+        this.coverage = new ArrayList<ArrayList<Integer>>();
     }
     
     public void cover(int classId, int line) {
-    	ClassRecord record = coverage.get(classId);
-    	if (record == null) {
-    		record = new ClassRecord(UnitListener.revClassIndex.get(classId));
-    		coverage.put(classId, record);
+    	coverClass(classId);
+    	while (classId >= coverage.size())
+    		coverage.add(new ArrayList<Integer>());
+    	ArrayList<Integer> lines = coverage.get(classId);
+    	int index = line / 32;
+    	int subindex = line % 32;
+    	while (index >= lines.size())
+    		lines.add(0);
+    	lines.set(index, lines.get(index) | (1 << subindex));
+    }
+    
+    private boolean classCovered(int id) {
+    	int index = id / 32;
+    	int subindex = id % 32;
+    	try {
+    		int x = classCoverage.get(index) & (1 << subindex);
+    		if (x != 0)
+    			return true;
+    		return false;
+    	} catch (IndexOutOfBoundsException e) {
+    		return false;
     	}
-    	record.addLine(line);
+    }
+    
+    private void coverClass(int id) {
+    	int index = id / 32;
+    	int subindex = id % 32;
+    	while (index >= classCoverage.size())
+    		classCoverage.add(0);
+    	classCoverage.set(index, classCoverage.get(index) | (1 << subindex));
     }
 
     public String getTestName() {
@@ -44,11 +72,32 @@ public class TestRecord implements Comparable<TestRecord> {
         return testName.compareTo(that.getTestName());
     }
     
-    public void writeClassRecords(HashMap<Integer, String> revClassIndex) throws IOException {
-    	ClassRecord[] records = coverage.values().toArray(new ClassRecord[coverage.size()]);
-    	Arrays.sort(records);
-        for (int i = 0; i < records.length; i ++) {
-        	records[i].writeLines();
-        }
+    public void writeClassRecords(BufferedOutputStream out, int[] order, String[] classNames) throws IOException {
+    	this.out = out;
+    	for (int i = 0; i < order.length; i ++) {
+    		if (!classCovered(order[i]))
+    			continue;
+    		ArrayList<Integer> classLines;
+    		try {
+    			classLines = coverage.get(order[i]);
+    		} catch (IndexOutOfBoundsException e) {
+    			continue;
+    		}
+    		for (int j = 0; j < classLines.size(); j ++) {
+    			int x = classLines.get(j);
+    			for (int k = 0; k < 32; k ++) {
+    				if ((x & (1 << k)) != 0) {
+    					write(classNames[i]);
+    					write(":");
+    					write(Integer.toString(j * 32 + k));
+    					write("\r\n");
+    				}
+    			}
+    		}
+    	}
+    }
+    
+    private static void write(String s) throws IOException {
+        out.write(s.getBytes(), 0, s.length());
     }
 }

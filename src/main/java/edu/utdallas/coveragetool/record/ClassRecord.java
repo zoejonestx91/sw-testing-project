@@ -14,31 +14,24 @@ import edu.utdallas.coveragetool.agent.UnitListener;
  * Created by z on 3/20/17.
  */
 public class ClassRecord implements Comparable<ClassRecord> {
-    HashSet<Integer> coverage;
-    String className;
+    int id;
+	String name;
     
-    public ClassRecord(String className) {
-    	this.className = className;
-    	coverage = new HashSet<Integer>();
-    }
-
-    public void addLine(int line){
-        coverage.add(line);
-    }
-    
-    public void writeLines() throws IOException {
-    	Integer[] lines = coverage.toArray(new Integer[coverage.size()]);
-    	Arrays.sort(lines);
-    	for (int i = 0; i < lines.length; i ++) {
-			UnitListener.write(className);
-			UnitListener.write(":");
-			UnitListener.write(Integer.toString(lines[i]));
-			UnitListener.write("\r\n");
-    	}
+    public ClassRecord(int id, String name) {
+    	this.id = id;
+    	this.name = name;
     }
 
 	@Override
-	public int compareTo(ClassRecord that) {
-		return className.compareTo(that.className);
+	public int compareTo(ClassRecord o) {
+		return name.compareTo(o.name);
+	}
+
+    public int getId() {
+		return id;
+	}
+
+	public String getName() {
+		return name;
 	}
 }

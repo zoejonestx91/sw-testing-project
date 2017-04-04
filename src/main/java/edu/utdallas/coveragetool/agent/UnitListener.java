@@ -13,40 +13,36 @@ import org.junit.runner.Description;
 import org.junit.runner.Result;
 import org.junit.runner.notification.RunListener;
 
+import edu.utdallas.coveragetool.record.ClassRecord;
 import edu.utdallas.coveragetool.record.Records;
 import edu.utdallas.coveragetool.record.TestRecord;
 
 public class UnitListener extends RunListener {
-	private static int numTests = 0;
 	static int numClasses = 0;
 	
 	static TestRecord currentRecord;
 	static ArrayList<TestRecord> tests;
-	static HashMap<String, Integer> classIndex;
-	public static HashMap<Integer, String> revClassIndex;
+	static ArrayList<ClassRecord> classes;
+	
+	private static int[] order;
+	private static String[] classNames;
 	
 	private static BufferedOutputStream out;
 	
 	public static void init() {
 		currentRecord = new TestRecord(null);
 		tests = new ArrayList<TestRecord>();
-		classIndex = new HashMap<String, Integer>();
-		revClassIndex = new HashMap<Integer, String>();
+		classes = new ArrayList<ClassRecord>();
 	}
 	
 	public static int mapClass(String className) {
-		classIndex.put(className, numClasses);
-		revClassIndex.put(numClasses, className);
+		classes.add(new ClassRecord(numClasses, className));
 		return numClasses ++;
 	}
 	
 	public void testStarted(Description description) {
 		currentRecord = new TestRecord(description.getClassName() + ':' + description.getMethodName());
 		tests.add(currentRecord);
-	}
-	
-	public void testFinished(Description description) {
-		numTests ++;
 	}
 	
 	public void testRunFinished(Result result) throws IOException {
@@ -65,7 +61,7 @@ public class UnitListener extends RunListener {
     }
 	
     private static void writeTestRecords() throws IOException {
-        for (int i = 0; i < numTests; i ++) {
+        for (int i = 0; i < tests.size(); i ++) {
             String name = tests.get(i).getTestName();
             if (name == null)
             	continue;
@@ -73,11 +69,23 @@ public class UnitListener extends RunListener {
             write(" ");
             write(name);
             write("\r\n");
-            tests.get(i).writeClassRecords(revClassIndex);
+            setOrder();
+            tests.get(i).writeClassRecords(out, order, classNames);
         }
     }
     
     public static void write(String s) throws IOException {
         out.write(s.getBytes(), 0, s.length());
+    }
+    
+    private static void setOrder() {
+    	ClassRecord[] records = classes.toArray(new ClassRecord[classes.size()]);
+    	Arrays.sort(records);
+    	order = new int[records.length];
+    	classNames = new String[records.length];
+    	for (int i = 0; i < records.length; i ++) {
+    		order[i] = records[i].getId();
+    		classNames[i] = records[i].getName();
+    	}
     }
 }
