@@ -18,11 +18,16 @@ import edu.utdallas.coveragetool.record.Records;
 import edu.utdallas.coveragetool.record.TestRecord;
 
 public class UnitListener extends RunListener {
+	public static int maxClasses = 350;
+	static int maxTests = 4500;
+	public static int maxLines = 3000;
+	
 	static int numClasses = 0;
+	static int numTests = 0;
 	
 	static TestRecord currentRecord;
-	static ArrayList<TestRecord> tests;
-	static ArrayList<ClassRecord> classes;
+	static TestRecord[] tests;
+	static ClassRecord[] classes;
 	
 	private static int[] order;
 	private static String[] classNames;
@@ -31,18 +36,19 @@ public class UnitListener extends RunListener {
 	
 	public static void init() {
 		currentRecord = new TestRecord(null);
-		tests = new ArrayList<TestRecord>();
-		classes = new ArrayList<ClassRecord>();
+		tests = new TestRecord[maxTests];
+		classes = new ClassRecord[maxClasses];
 	}
 	
 	public static int mapClass(String className) {
-		classes.add(new ClassRecord(numClasses, className));
+		classes[numClasses] = new ClassRecord(numClasses, className);
 		return numClasses ++;
 	}
 	
 	public void testStarted(Description description) {
 		currentRecord = new TestRecord(description.getClassName() + ':' + description.getMethodName());
-		tests.add(currentRecord);
+		tests[numTests] = currentRecord;
+		numTests++;
 	}
 	
 	public void testRunFinished(Result result) throws IOException {
@@ -61,7 +67,7 @@ public class UnitListener extends RunListener {
     }
 	
     private static void writeTestRecords() throws IOException {
-    	TestRecord[] records = tests.toArray(new TestRecord[tests.size()]);
+    	TestRecord[] records = Arrays.copyOf(tests, numTests);
     	Arrays.sort(records);
         for (int i = 0; i < records.length; i ++) {
             String name = records[i].getTestName();
@@ -81,7 +87,7 @@ public class UnitListener extends RunListener {
     }
     
     private static void setOrder() {
-    	ClassRecord[] records = classes.toArray(new ClassRecord[classes.size()]);
+    	ClassRecord[] records = Arrays.copyOf(classes, numClasses);
     	Arrays.sort(records);
     	order = new int[records.length];
     	classNames = new String[records.length];
