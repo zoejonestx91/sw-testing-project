@@ -22,6 +22,7 @@ public class Agent {
     	if (agentArgs != null)
 	    	for (String s : agentArgs.split(","))
 	    		argHandler(s);
+    	UnitListener.init();
     	transform.classesToInstrument = paths.toArray(new String[paths.size()]);
         inst.addTransformer(transform);
     }
@@ -29,8 +30,19 @@ public class Agent {
     public static void argHandler(String arg) {
     	switch (arg) {
     		case "--writebytecode":
-    		case "-b": transform.writeClasses = true; break;
-    		default: paths.add(arg.replace('.', '/'));
-    	}
+    		case "-b":
+    			transform.writeClasses = true;
+    			break;
+    		default:
+    			if (arg.startsWith("-t")) {
+    				UnitListener.maxTests = Integer.parseInt(arg.substring(2)) + 1;
+    			} else if (arg.startsWith("-c")) {
+    				UnitListener.maxClasses = Integer.parseInt(arg.substring(2)) + 1;
+    			} else if (arg.startsWith("-n")) {
+    				UnitListener.maxLines = Integer.parseInt(arg.substring(2)) + 1;
+    			} else {
+    				paths.add(arg.replace('.', '/'));
+    			}
+		}
     }
 }

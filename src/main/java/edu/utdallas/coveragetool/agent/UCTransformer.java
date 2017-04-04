@@ -25,7 +25,7 @@ public class UCTransformer implements ClassFileTransformer {
 		if (classToInstrument(className)) {
 			ClassReader reader = new ClassReader(classfileBuffer);
 			ClassWriter writer = new ClassWriter(reader, ClassWriter.COMPUTE_FRAMES);
-			reader.accept(new UCClassVisitor(writer, className), 0);
+			reader.accept(new UCClassVisitor(writer, UnitListener.mapClass(className)), 0);
 			
 			if (writeClasses) {
 				try {

@@ -6,14 +6,14 @@ import org.objectweb.asm.Opcodes;
 
 public class UCMethodVisitor extends MethodVisitor implements Opcodes {
 	String mName;
-	String cName;
+	int cId;
 	int line;
 	
-	public UCMethodVisitor(MethodVisitor mv, String mName, String className) {
+	public UCMethodVisitor(MethodVisitor mv, String mName, int classId) {
 		super(ASM5, mv);
 		this.mName = mName;
 		this.line = 0;
-		this.cName = className;
+		this.cId = classId;
 	}
 	
 	@Override
@@ -32,9 +32,9 @@ public class UCMethodVisitor extends MethodVisitor implements Opcodes {
 	// Invokes the main coverage function given a class name and line number
 	private void mvStmtCover() {
 		if (line > 0) {
-			mv.visitLdcInsn(cName);
+			mv.visitIntInsn(SIPUSH, cId);
 			mv.visitIntInsn(SIPUSH, line);
-			mv.visitMethodInsn(INVOKESTATIC, "edu/utdallas/coveragetool/agent/UnitListener", "stmtCover", "(Ljava/lang/String;I)V", false);
+			mv.visitMethodInsn(INVOKESTATIC, "edu/utdallas/coveragetool/agent/UnitListener", "stmtCover", "(II)V", false);
 		}
 	}
 }
