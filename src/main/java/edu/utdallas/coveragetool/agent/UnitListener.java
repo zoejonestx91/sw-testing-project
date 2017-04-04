@@ -26,7 +26,7 @@ public class UnitListener extends RunListener {
 	static int numTests = 0;
 	
 	static TestRecord currentRecord;
-	public static long[][] currentCoverage;
+	public static int[][] currentCoverage;
 	static TestRecord[] tests;
 	static ClassRecord[] classes;
 	

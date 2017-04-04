@@ -16,14 +16,14 @@ import java.util.TreeSet;
  */
 public class TestRecord implements Comparable<TestRecord> {
     String testName;
-    public long[][] coverage;
-    public final static byte WORD_SIZE = 64;
+    public int[][] coverage;
+    public final static byte WORD_SIZE = 32;
     
     static BufferedOutputStream out;
 
     public TestRecord(String testId) {
         this.testName = testId;
-        this.coverage = new long[UnitListener.maxClasses][UnitListener.maxLines / WORD_SIZE + 1];
+        this.coverage = new int[UnitListener.maxClasses][UnitListener.maxLines / WORD_SIZE + 1];
     }
     
     public void cover(int classId, int line) {
@@ -45,17 +45,17 @@ public class TestRecord implements Comparable<TestRecord> {
     public void writeClassRecords(BufferedOutputStream out, int[] order, String[] classNames) throws IOException {
     	this.out = out;
     	for (int i = 0; i < order.length; i ++) {
-    		long[] classLines;
+    		int[] classLines;
     		try {
     			classLines = coverage[order[i]];
     		} catch (IndexOutOfBoundsException e) {
     			continue;
     		}
     		for (int j = 0; j < classLines.length; j ++) {
-    			long x = classLines[j];
+    			int x = classLines[j];
     			if (x == 0)
     				continue;
-    			for (byte k = 0; k < WORD_SIZE; k ++) {
+    			for (int k = 0; k < WORD_SIZE; k ++) {
     				if ((x & (1 << k)) != 0) {
     					write(classNames[i]);
     					write(":");

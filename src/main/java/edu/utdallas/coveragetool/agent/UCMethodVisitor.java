@@ -37,19 +37,34 @@ public class UCMethodVisitor extends MethodVisitor implements Opcodes {
 //			mv.visitIntInsn(SIPUSH, cId);
 //			mv.visitIntInsn(SIPUSH, line);
 //			mv.visitMethodInsn(INVOKESTATIC, "edu/utdallas/coveragetool/agent/UnitListener", "stmtCover", "(II)V", false);
+
+			// longs
+//			mv.visitFieldInsn(GETSTATIC, "edu/utdallas/coveragetool/agent/UnitListener", "currentCoverage", "[[J");
+//			mv.visitIntInsn(SIPUSH, cId);
+//			mv.visitInsn(AALOAD);
+//			mv.visitIntInsn(SIPUSH, line / 64);
+//			mv.visitFieldInsn(GETSTATIC, "edu/utdallas/coveragetool/agent/UnitListener", "currentCoverage", "[[J");
+//			mv.visitIntInsn(SIPUSH, cId);
+//			mv.visitInsn(AALOAD);
+//			mv.visitIntInsn(SIPUSH, line / 64);
+//			mv.visitInsn(LALOAD);
+//			mv.visitLdcInsn(new Long(1 << (line % 64)));
+//			mv.visitInsn(LOR);
+//			mv.visitInsn(LASTORE);
 			
-			mv.visitFieldInsn(GETSTATIC, "edu/utdallas/coveragetool/agent/UnitListener", "currentCoverage", "[[J");
+			// ints
+			mv.visitFieldInsn(GETSTATIC, "edu/utdallas/coveragetool/agent/UnitListener", "currentCoverage", "[[I");
 			mv.visitIntInsn(SIPUSH, cId);
 			mv.visitInsn(AALOAD);
-			mv.visitIntInsn(SIPUSH, line / 64);
-			mv.visitFieldInsn(GETSTATIC, "edu/utdallas/coveragetool/agent/UnitListener", "currentCoverage", "[[J");
+			mv.visitIntInsn(SIPUSH, line / TestRecord.WORD_SIZE);
+			mv.visitFieldInsn(GETSTATIC, "edu/utdallas/coveragetool/agent/UnitListener", "currentCoverage", "[[I");
 			mv.visitIntInsn(SIPUSH, cId);
 			mv.visitInsn(AALOAD);
-			mv.visitIntInsn(SIPUSH, line / 64);
-			mv.visitInsn(LALOAD);
-			mv.visitLdcInsn(new Long(1 << (line % 64)));
-			mv.visitInsn(LOR);
-			mv.visitInsn(LASTORE);
+			mv.visitIntInsn(SIPUSH, line / TestRecord.WORD_SIZE);
+			mv.visitInsn(IALOAD);
+			mv.visitIntInsn(SIPUSH, 1 << (line % TestRecord.WORD_SIZE));
+			mv.visitInsn(IOR);
+			mv.visitInsn(IASTORE);
 		}
 	}
 }
