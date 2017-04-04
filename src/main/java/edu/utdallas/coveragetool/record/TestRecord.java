@@ -4,6 +4,8 @@ import edu.utdallas.coveragetool.record.ClassRecord;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -14,18 +16,20 @@ import java.util.TreeSet;
  */
 public class TestRecord implements Comparable<TestRecord> {
     String testName;
-    boolean[][] coverage;
-    boolean[] classCoverage;
+    HashMap<Integer, ClassRecord> coverage;
 
-    public TestRecord(String testId, int maxClasses, int maxLines) {
+    public TestRecord(String testId) {
         this.testName = testId;
-        this.coverage = new boolean[maxClasses][maxLines];
-        this.classCoverage = new boolean[maxClasses];
+        this.coverage = new HashMap<Integer, ClassRecord>();
     }
     
     public void cover(int classId, int line) {
-    	coverage[classId][line] = true;
-    	classCoverage[classId] = true;
+    	ClassRecord record = coverage.get(classId);
+    	if (record == null) {
+    		record = new ClassRecord(UnitListener.revClassIndex.get(classId));
+    		coverage.put(classId, record);
+    	}
+    	record.addLine(line);
     }
 
     public String getTestName() {
@@ -40,14 +44,11 @@ public class TestRecord implements Comparable<TestRecord> {
         return testName.compareTo(that.getTestName());
     }
     
-    public void writeClassRecords(BufferedOutputStream out, HashMap<Integer, String> revClassIndex) throws IOException {
-        for (int i = 0; i < classCoverage.length; i ++) {
-        	if (classCoverage[i] == false)
-        		continue;
-        	for (int j = 0; j < coverage[i].length; j ++) {
-        		if (coverage[i][j] == true)
-        			UnitListener.write(revClassIndex.get(i)+":"+j+"\r\n");
-        	}
+    public void writeClassRecords(HashMap<Integer, String> revClassIndex) throws IOException {
+    	ClassRecord[] records = coverage.values().toArray(new ClassRecord[coverage.size()]);
+    	Arrays.sort(records);
+        for (int i = 0; i < records.length; i ++) {
+        	records[i].writeLines();
         }
     }
 }

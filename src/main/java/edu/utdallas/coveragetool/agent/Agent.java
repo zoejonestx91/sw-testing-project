@@ -34,15 +34,7 @@ public class Agent {
     			transform.writeClasses = true;
     			break;
     		default:
-    			if (arg.startsWith("-t")) {
-    				UnitListener.maxTests = Integer.parseInt(arg.substring(2)) + 1;
-    			} else if (arg.startsWith("-c")) {
-    				UnitListener.maxClasses = Integer.parseInt(arg.substring(2)) + 1;
-    			} else if (arg.startsWith("-n")) {
-    				UnitListener.maxLines = Integer.parseInt(arg.substring(2)) + 1;
-    			} else {
-    				paths.add(arg.replace('.', '/'));
-    			}
+    			paths.add(arg.replace('.', '/'));
 		}
     }
 }
