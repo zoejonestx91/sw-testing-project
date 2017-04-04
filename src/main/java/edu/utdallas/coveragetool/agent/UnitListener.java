@@ -61,8 +61,10 @@ public class UnitListener extends RunListener {
     }
 	
     private static void writeTestRecords() throws IOException {
-        for (int i = 0; i < tests.size(); i ++) {
-            String name = tests.get(i).getTestName();
+    	TestRecord[] records = tests.toArray(new TestRecord[tests.size()]);
+    	Arrays.sort(records);
+        for (int i = 0; i < records.length; i ++) {
+            String name = records[i].getTestName();
             if (name == null)
             	continue;
             write(Records.PREAMBLE);
@@ -70,7 +72,7 @@ public class UnitListener extends RunListener {
             write(name);
             write("\r\n");
             setOrder();
-            tests.get(i).writeClassRecords(out, order, classNames);
+            records[i].writeClassRecords(out, order, classNames);
         }
     }
     
