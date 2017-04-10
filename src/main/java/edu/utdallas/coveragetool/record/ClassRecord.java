@@ -1,33 +1,37 @@
 package edu.utdallas.coveragetool.record;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
+
+import edu.utdallas.coveragetool.agent.UnitListener;
 
 /**
  * Created by z on 3/20/17.
  */
 public class ClassRecord implements Comparable<ClassRecord> {
-    String className;
-    Set<Integer> lineRecords = new TreeSet<Integer>();
-
-    public Set<Integer> getLineRecords() {
-        return lineRecords;
+    int id;
+	String name;
+    
+    public ClassRecord(int id, String name) {
+    	this.id = id;
+    	this.name = name;
     }
 
-    public ClassRecord(String className) {
-        this.className = className;
-    }
+	@Override
+	public int compareTo(ClassRecord o) {
+		return name.compareTo(o.name);
+	}
 
-    public void addLine(int line){
-        lineRecords.add(line);
-    }
+    public int getId() {
+		return id;
+	}
 
-    public String getClassName() {
-        return className;
-    }
-
-    public int compareTo(ClassRecord o) {
-        return className.compareTo(o.getClassName());
-    }
+	public String getName() {
+		return name;
+	}
 }

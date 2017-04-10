@@ -14,52 +14,56 @@ import java.util.TreeSet;
  */
 public class Records {
     private static Set<TestRecord> testRecords = new TreeSet<TestRecord>();
-    private static Map<String, TestRecord> testRecordMap = new HashMap<String, TestRecord>();
-    private static final String PATH = "stmt-cov.txt";
-    private static final String PREAMBLE = "[TEST]";
+    private static Map<Integer, TestRecord> testRecordMap = new HashMap<Integer, TestRecord>();
+    public static final String PATH = "stmt-cov.txt";
+    public static final String PREAMBLE = "[TEST]";
     private static BufferedOutputStream out;
 
-    public static TestRecord addTestRecord(String testName){
-        TestRecord candidate = new TestRecord(testName);
-        if(testRecords.add(candidate)){
-            testRecordMap.put(testName, candidate);
-            return candidate;
-        } else {
-            return testRecordMap.get(testName);
-        }
-    }
-
-    public static void writeout() throws IOException {
-        out = new BufferedOutputStream(new FileOutputStream(PATH));
-        writeTestRecords();
-        out.flush();
-        out.close();
-    }
-
-    static void writeTestRecords() throws IOException {
-        for (TestRecord testRecord: testRecords) {
-            write(PREAMBLE);
-            write(testRecord.getTestName());
-            write("\n");
-            writeClassRecords(testRecord);
-        }
-    }
-
-    static void writeClassRecords(TestRecord testRecord) throws IOException {
-        for (ClassRecord classRecord: testRecord.getClassRecords())
-        {
-            writeLines(classRecord);
-        }
-    }
-
-    static void writeLines(ClassRecord classRecord) throws IOException {
-        String className = classRecord.getClassName();
-        for(Integer lineNum: classRecord.getLineRecords()){
-            write(className+":"+lineNum+"\n");
-        }
-    }
-
-    static void write(String s) throws IOException {
-        out.write(s.getBytes(), 0, s.length());
-    }
+//    public static TestRecord addTestRecord(Integer testId){
+//        TestRecord candidate = new TestRecord(testId);
+//        if(testRecords.add(candidate)){
+//            testRecordMap.put(testId, candidate);
+//            return candidate;
+//        } else {
+//            return testRecordMap.get(testId);
+//        }
+//    }
+//
+//    public static void writeout(Map<String, Integer> nameMap, Map<Integer, String> idMap) throws IOException {
+//        out = new BufferedOutputStream(new FileOutputStream(PATH));
+//        writeTestRecords(nameMap, idMap);
+//        out.flush();
+//        out.close();
+//    }
+//
+//    static void writeTestRecords(Map<String, Integer> nameMap, Map<Integer, String> idMap) throws IOException {
+//        for (TestRecord testRecord: testRecords) {
+//            String name = idMap.get(testRecord.getTestName());
+//            if (name == null)
+//            	continue;
+//            write(PREAMBLE);
+//            write(" ");
+//            write(name);
+//            write("\r\n");
+//            writeClassRecords(testRecord, idMap);
+//        }
+//    }
+//
+//    static void writeClassRecords(TestRecord testRecord, Map<Integer, String> idMap) throws IOException {
+//        for (ClassRecord classRecord: testRecord.getClassRecords())
+//        {
+//            writeLines(classRecord, idMap);
+//        }
+//    }
+//
+//    static void writeLines(ClassRecord classRecord, Map<Integer, String> idMap) throws IOException {
+//        Integer className = classRecord.getClassName();
+//        for(Integer lineNum: classRecord.getLineRecords()){
+//            write(idMap.get(className)+":"+lineNum+"\r\n");
+//        }
+//    }
+//
+//    static void write(String s) throws IOException {
+//        out.write(s.getBytes(), 0, s.length());
+//    }
 }
