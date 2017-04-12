@@ -1,0 +1,180 @@
+\newcommand{\ct}{\mbox{\textsc{CoverageTool}}}
+\newcommand{\mt}{\mbox{\textsc{MetricsTool}}}
+
+\section{Problem Statement}
+
+Our first problem is to create a tool capable of instrumenting Java programs using Java Agent to collect coverage information for JUnit tests. We will refer to this tool as \ct{}.
+
+Our second problem is to create a tool that will statically compute a set of metrics using ASM. We will refer to this tool as \mt{}.
+
+We would like to be able to offer our project as a basis for future extension to tackle research problems with regards to software metrics.
+
+\section{Technique Discussion}
+
+\subsection{Instrumentation and Analysis}
+
+To disassemble and analyze target projects, we will use ASM and Java Agent.
+
+\subsection{Metrics of Interest}
+
+There are several metrics that we will be interested in  collecting. We plan to cover all metrics listed under the JHawk method metrics listing~\cite{jhawkmetrics}, as well as some of the class metrics, and a couple of extra method metrics. Below, we speak to a selection of the metrics that may prove especially challenging or interesting.
+
+\subsubsection{Comments}
+
+It is unclear to us at this time how best to approach gathering metrics for comments. Since comments in the source code do not appear to be persisted into the bytecode at compilation time, it is unclear how ASM can be used to gather information on them (since it operates on bytecode). At this time, our research indicates that there are no bytecode instructions pertaining to comments.
+
+\subsubsection{Cyclomatic Complexity}
+
+This metric is constructed from the attributes of the program's control flow graph. Since the project only demands statement-level coverage at minimum, additional coverage analysis (in the form of branch-level coverage) may be necessary in order to determine this metric.
+
+\subsubsection{Classification}
+
+We are interested in also implementing simple heuristics to allow method classification for some level of statistical analysis. For example, identifying getters, setters, and constructors. We propose to also allow these heuristics to be extended by end users.
+
+\section{Implementation Plan}
+\ct{} will be made to be run under Maven, for easy integration into existing projects. It will be able to output its results to the terminal or a file. If a project has an appropriately modified \texttt{pom.xml} file, then \ct{} can be run by using \texttt{mvn test}. A feature that we are considering is a script that will attempt to patch the relevant \texttt{pom.xml} file to include \ct{}.
+
+\mt{} will at the least have a command line tool, to ease its usage in scripts. We hope to be able to also create a GUI frontend, but we have concerns about the practicality of this in the given time period.
+
+Both tools will be written in Java, so as to be able to take advantage of Java's reflection tools to disassemble and instrument projects. They will also likely share some of their code. While they are planned to be separate tools, their output will be designed to be merged if the researcher desires.
+
+\section{Experimental Plan}
+
+\subsection{Source Project Selection}
+
+Ideally, the projects we select should have the following attributes:
+
+\begin{itemize}
+\item \textbf{Size} - We are required to select projects with at least 1,000 Lines of Code. To help validate the tool, we would want to have at least two that are near this limit, to simplify initial testing.
+\item \textbf{Test Coverage} - We would like to have plenty of test coverage available on each project. In order to satisfy this attribute, we likely will start with an initial set of 15 projects under test, and narrow our scope to the ten with the best coverage.
+\item \textbf{Maturity} - To give us a good sample set, we would prefer mature, long running projects.
+\item \textbf{Type} - Generally, libraries and APIs will be easier to test than apps with GUIs. In particular, for the sake of automated testing, we would prefer projects that can run headless.
+\item \textbf{Variety} - A selection of projects with different purposes increases our ability to test the robustness of our tools. Since projects with different aims are more likely to adopt different approaches to solving their problems, they are more likely to expose erroneous behavior in our tools.
+\end{itemize}
+
+The following is our current list of test candidates:
+
+\begin{itemize}
+	\item \textbf{apache/commons-codec} - An encoding library.
+    \item \textbf{apache/commons-lang} - A set of utilities for Java's lang package, or considered common enough to be included in lang.
+    \item \textbf{apache/commons-io} - A set of IO utilities.
+    \item \textbf{Bukkit/Bukkit} - A video game server API.
+    \item \textbf{evernote/evernote-sdk-java} - The cloud API for a note-taking application.
+    \item \textbf{docker-java/docker-java} - A software container API.
+    \item \textbf{junit-team/junit4} - A testing framework.
+    \item \textbf{RoaringBitmap/RoaringBitmap} - A data structure library
+    \item \textbf{wg/scrypt} - A cryptographic library.
+    \item \textbf{xerial/sqlite-jdbc} - A library for accessing SQLite databases in Java.
+    \item \textbf{cranshaw/sqlite-jdbc} - The predecessor of the previous library.\footnote{While this is not on the approved list we were given, we believe it will be suitable for our purposes.}
+\end{itemize}
+
+\subsection{Validation}
+
+To validate our work, we plan to compare our results to currently available tools such as SourceMeter. 
+
+\section{CoverageTool}
+
+\subsection{Design}
+
+\subsubsection{Architecture}
+
+Early in the design phase it became apparent that the design of \ct{} would include three primary modules: a Java Agent meant to setup and coordinate the bytecode transformer, the bytecode transformer itself, and the JUnit RunListener. While it may have been possible to implement \ct{} without the agent, it proved to be the best way to accept configuration arguments in the context of Maven. In particular, the agent allows us to specify in the \texttt{pom.xml} which packages or classes should be monitored for coverage information. As a result, the agent module is rather small, as its only purpose is to serve as an initializer and argument handler. The other two modules are indispensable and provide the main functionality.
+
+In order to fulfill the coverage collection requirement, we implement a bytecode transformation module that can be configured to target specific packages and classes. Since bytecode transformations are more difficult to implement, we anticipated that direct reliance of the transformations on features of other modules would be unwieldy. As a result, most of our iterations on this module featured an approach to instrumentation that simply instructed targeted bytecode to call out to some static handler method, which would then implement any interaction with our data storage submodule.
+
+Finally, since the requirements of the \ct{} project demand that coverage information be collected with respect to individual tests, an extension of the JUnit RunListener class was necessary. This modules serves as the collection hub for various data. Its purposes include setting up coverage data structures on a per-test basis, managing configuration options provided by the agent, and writing the coverage information as output at the end of a test run. The test listener module uses as a submodule our storage mechanism, which assists in managing coverage information. This particular submodule has seen a great deal of iteration.
+
+\subsubsection{Runtime Re-Instrumentation}
+
+Our initial plans for the transformation module were significantly more complex and would likely have resulted in a more sophisticated architecture. We were concerned from the beginning that instrumenting large projects would incur a large overhead if many of the instrumented methods were not relevant to the tests being run. Indeed, between the \texttt{commons-dbutils} and \texttt{joda-time} projects, we found that some source files had upwards of 2000 lines of code. If a test run included only a fraction of the methods in a large source file, many methods would be instrumented that would never be tested. To this end, we set out to limit our transformations such that only those units that were necessary would be instrumented.
+
+Rather than perform some sort of static analysis or depend on feedback from dynamic analysis (which may itself rely on a method of detecting which methods were covered by a test run), we opted to intercept calls to undiscovered methods and instrument them at runtime. Of course, this would require not only that we implement instrumentation to detect when user code called undiscovered user code, but that we instrument the user tests themselves in order to detect calls to targeted user code.
+
+This strategy, while interesting, proved difficult to implement during the early stages. During this time we were informed that the overhead of the instrumentation process is actually rather low compared to the typical overhead introduced by the instrumentation itself. In light of this, we decided to change our approach. A comparison between this strategy and the more straightforward approach that we adopted is left for future work.
+
+\subsubsection{Single Pass}
+
+Discarding the need for method-level instrumentation granularity renders the process rather straightforward. The \texttt{java.lang.instrument} package, by default, will only instrument classes as they are picked up by the class loader. This guarantees at least class-level instrumentation granularity and excludes classes that, even if targeted, would not ever have their code run. As a result, there is no need to instrument the user's test cases or perform any sort of detection of uninstrumented code, as the framework handles this for us.
+
+Our transformation module consists of a few extensions to the \texttt{instrument} package's classes. We implement a custom transformer class that distinguishes between targeted packages and classes based on fully-qualified names. We also implement a very simple custom class visitor that stores class ID information derived from our storage submodule. This ID is passed to a custom method visitor that detects when lines are visited. For the sake of simplicity the handling of visited lines was such that the class ID and line number would be provided to a static handler method with access to our storage mechanism, but our latest iterations instead feature direct bytecode access to the storage mechanism.
+
+\subsection{Iterations and Intermediate Results}
+
+After its first full implementation, \ct{} went through another four iterations to improve its performance, which was encountering a very serious bottleneck in the storage submodule. While there were perhaps two more potential approaches, the four iterations \ct{} went through proved sufficient to reduce its overhead to about 80\% for the \texttt{joda-time} project, one of two projects we initially tested it on.
+
+While our initial implementation used an ordered tree to store coverage information, this caused \texttt{joda-time}, which had previously had test times of about 15 seconds, to take 20 minutes. Our research indicated that boolean arrays, the BitSet class, or storage utilizing bitwise operations may be good options, so we chose to pursue some of these.
+
+It is important to note that we store coverage information on a per-test basis so that it may be sorted before being output. Since the coverage is performed for every test and each test has unique coverage data, we essentially used a two-dimensional array for each test, with one index referring to a class ID and the other referring to a line number. The array entry would then indicate whether or not the line had been covered by the test in question.
+
+\subsubsection{Static Boolean Arrays}
+
+Our readings online suggested that the use of arrays of boolean values was perhaps the fastest way of storing the information we needed. In Java, booleans don't have a strictly defined size; they typically take the size of an integer (32 bits), which reflects their implementation in the JVM. Boolean arrays, on the other hand, confine each boolean to a single byte. Of course, this means each boolean still consumes 7 more bits than necessary to store its information.
+
+After finding that our original tree-based storage method did not work well, this was our first iteration on the storage submodule. We found conservatively large sizes for the coverage arrays based on the anticipated maximum number of classes and line numbers. Memory issues were expected to some extent, as we store the coverage information until the end of the entire test run. For 4000 tests over 500 classes each expected to have a maximum of 2500 lines, 4.66GB of memory should be necessary for the boolean arrays alone. Unfortunately, even allocating 8GB of memory to a 64-bit JVM did not prevent it from crashing.
+
+\subsubsection{HashMaps}
+
+After the failure of the boolean approach above, we chose to return roughly to our original architecture and make some modifications that would take advantage of new information. Using the Java HashMap class, we restructured our original approach such that a dynamic array of test records could rely on our original tree assumptions. Rather than use the TreeSet class for organizing class records, we simply used HashMaps from class IDs to class records, which then stored HashSets of integer values representing line numbers covered. This finally brought the \texttt{joda-time} test duration down to about 1.5 minutes. Of course, this was still not enough to be competitive, so we chose to iterate further.
+
+% If this was in fact done, I forgot to ever commit it. The performance must not have been good enough. I did not document its impact.
+% \subsubsection{Dynamic Boolean Arrays}
+
+% To reduce the memory consumption of the previous approach, we opted not to rely on estimates for the number of classes or line numbers to bound the size of the arrays. Instead, we used the standard ArrayList class in place of static arrays. With the problem of memory eliminated, the approach worked just fine. The time required to test \texttt{joda-time} was reduced to around ??, a vast improvement over the 20 minutes required by the tree-based approach. Still, additional changes would be necessary to make it competitive with other implementations.
+
+\subsubsection{Dynamic Bit Arrays}
+
+While it was not clear whether the space overhead of using booleans would be causing any performance losses, and while it seemed that HashSets ought to be efficient enough to meet our requirements, we decided that the next approach was still worth trying for as long as improvements were known to be possible. Since we still had the BitSet structure and bitwise operations to choose between, a judgment had to be made between them. According to our research, the BitSet implementation approaches the efficiency of manual bitwise operations on extremely large data sets, implying that bitwise operations should generally be preferable, especially for a problem as simple as ours.
+
+To this end, we iterated on the previous designs by replacing the boolean entries of the static arrays with integers contained in dynamic arrays. Using bitwise operations, each integer could then store a true or false flag for 32 different line numbers in a single class. Using dynamic arrays meant that we would be able to work independently of any assumption about the number of classes to be instrumented or the number of lines in each class.
+
+This approach was successful in making our tool more competitive, as the test time for \texttt{joda-time} was reduced to 1.25 minutes. Still, this was not good enough to even make an entry for the second round.
+
+\subsubsection{Static Bit Arrays}
+
+With the shift to bitwise operations proving successful in reducing execution time, it became appropriate to reconsider statically-sized arrays. Storing coverage information at bit-level granularity (as opposed to byte-level) reduces memory consumption by a factor of 8, assuming the boolean arrays do indeed store each boolean using 8 bits. With this in mind, we reimplemented the assumptions about class numbers and line numbers in order to allocate statically-sized arrays of integers. The result was such that no changes needed to be made to the JVM's memory arguments and execution succeeded. Moreover, the \texttt{joda-time} project was successfully tested in around 20 seconds, placing our tool firmly in the lead of the others in the competition.
+
+The only other change at play was the removal of an attempted optimization to detect classes that were not covered by a test. The purpose of this optimization had been to speed up the time to output the coverage information, but it was found that removing this functionality reduced test time to 1 minute prior to the above array implementation. The 40-second speedup that followed was a surprising result considering how little was changed.
+
+\subsection{Future Work}
+
+We overlooked one potential optimization for the static array approaches that may have allowed the boolean strategy to work and may have sped up the bit strategy further. Rather than allocating the nested array corresponding to line numbers \textit{when} a class finally gets covered, we allocate them all at once presuming each class will be covered. Furthermore, because the number of lines a class contains can be discovered by an ASM class visitor, it is possible to size these arrays appropriately to each class. This strategy is far more reasonable than our current approach.
+
+\section{MetricsTool}
+
+\subsection{Design and Architecture}
+
+As our imagined primary use case is intended for research purposes, we are emphasizing extensibility and versatility over performance. So, \mt{} uses an plugin-based architecture. To simplify development and to provide an example for end users, our default metrics are defined as plugins themselves. For our list of default metrics for initial release, please see the attached listing in the final report. While \mt{} takes lessons and some code from \ct{}, they are not directly compatible, as we do not need performance at the cost of everything else. The plugins are configured by a suite of Java annotations that are interpreted on load.
+
+The collected metrics are stored by TableStore in a set of Tables, which are divided by the type of artifact. The cells in the tables are referenced by artifact identifier and metric identity.
+
+\mt{} operates in multiple execution phases.
+\begin{enumerate}
+\item \textbf{Plugin Load} - Plugins are loaded from \texttt{./plugins/}, and are scanned for configuration annotations.
+\item \textbf{Preinstrumentation} - Plugins have access to code before instrumentation. This is helpful for static analysis.
+\item \textbf{Instrumentation} - The target code is instrumented by the Instrumenter.
+\item \textbf{Test} - Tests are permitted to execute. 
+\item \textbf{Postprocessing} - After tests are completed, plugins are allowed to do postprocessing, which is intended for plugins to calculate derived values.
+\item \textbf{Output} - The contents of TableStore are written to disk for external analysis.
+\end{enumerate}
+
+\mt{} can collect metrics at the following levels:
+
+\begin{itemize}
+\item package
+\item interface
+\item class
+\item method
+\item block
+\item statement
+\end{itemize}
+
+Instrumentation is performed in much the same way that \ct{} adds instrumentation. Plugins are able to perform work before and after the instrumentation. When instrumented code is called, it connects to a handler in the Scheduler, which will then fire callbacks registered by the plugins. This will notify relevant plugins of the artifact, and allow them to analyze it.
+
+
+\subsection{Future Work}
+
+\subsubsection{Multithreading}
+Currently, \mt{} is single-threaded. However, the design is meant to permit multithreading in the future without the need to modify plugins. 
+
+\subsubsection{Storage Enhancements}
+At this juncture, \mt{} has a fairly naive implementation for the Table subsystem. In later iterations, we would hope to have more efficient mechanisms for storage.
