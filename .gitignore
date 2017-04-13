@@ -7,8 +7,8 @@
 *.gz
 target/
 bin/
-.classpath
-.project
-.settings/
+*.classpath
+*.project
+*.settings/
 *.class
 stmt-cov.txt
