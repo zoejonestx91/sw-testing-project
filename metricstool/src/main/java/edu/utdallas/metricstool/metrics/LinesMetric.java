@@ -27,7 +27,9 @@ public class LinesMetric extends MetricCollector {
 	
 	@Override
 	public void visitEnd() {
-		System.out.println(cName + ":" + mName + " - " + (maxLine - minLine + 1) + " lines");
+		// TODO: investigate <init> methods that don't return a number of lines
+		int lines = maxLine - minLine + 1;
+		System.out.println("Lines of Code: " + lines);
 	}
 
 }

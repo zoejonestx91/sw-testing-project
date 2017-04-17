@@ -10,9 +10,13 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.TypePath;
 
-import edu.utdallas.metricstool.metrics.LinesMetric;
+import edu.utdallas.metricstool.metrics.*;
 
 public class MainMethodVisitor extends MethodVisitor implements Opcodes {
+
+	String cName;
+	String mName;
+	String signature;
 	
 	private ArrayList<MetricCollector> collectors = null;
 	
@@ -24,8 +28,13 @@ public class MainMethodVisitor extends MethodVisitor implements Opcodes {
 			String signature,
 			String[] exceptions) {
 		super(ASM5, mv);
+		this.cName = cName;
+		this.mName = mName;
+		this.signature = signature;
 		
 		this.collectors = new ArrayList<MetricCollector>();
+		collectors.add(new NameMetric(mv, cName, access, mName, desc, signature, exceptions));
+		collectors.add(new ArgcMetric(mv, cName, access, mName, desc, signature, exceptions));
 		collectors.add(new LinesMetric(mv, cName, access, mName, desc, signature, exceptions));
 	}
 
@@ -55,6 +64,7 @@ public class MainMethodVisitor extends MethodVisitor implements Opcodes {
 
 	@Override
 	public void visitEnd() {
+		System.out.println("\n" + cName + ":" + mName + signature);
 		for (MetricCollector m : collectors) { m.visitEnd(); }
 		super.visitEnd();
 	}
