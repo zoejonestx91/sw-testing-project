@@ -35,6 +35,8 @@ public class MainMethodVisitor extends MethodVisitor implements Opcodes {
 		this.collectors = new ArrayList<MetricCollector>();
 		collectors.add(new NameMetric(mv, cName, access, mName, desc, signature, exceptions));
 		collectors.add(new ArgcMetric(mv, cName, access, mName, desc, signature, exceptions));
+		collectors.add(new VarDecMetric(mv, cName, access, mName, desc, signature, exceptions));
+		collectors.add(new VarRefMetric(mv, cName, access, mName, desc, signature, exceptions));
 		collectors.add(new LinesMetric(mv, cName, access, mName, desc, signature, exceptions));
 	}
 

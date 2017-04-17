@@ -6,9 +6,11 @@ The following is the list of JHawk method metrics and the class implementing the
 * **Cyclomatic Complexity**: TODO
 * **Number of Arguments**: ArgcMetric
 * **Number of Comments**: N/A
+  * Unable to be implemented since bytecode contains no information about comments.
 * **Number of Comment Lines**: N/A
-* **Variable Declarations**: TODO
-* **Variable References**: TODO
+  * Unable to be implemented since bytecode contains no information about comments.
+* **Variable Declarations**: VarDecMetric
+* **Variable References**: VarRefMetric
 * **Number of statements**: TODO
 * **Number of expressions**: TODO
 * **Max depth of nesting**: TODO
