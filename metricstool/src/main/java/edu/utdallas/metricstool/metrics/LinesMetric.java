@@ -7,25 +7,27 @@ import edu.utdallas.metricstool.MetricCollector;
 
 public class LinesMetric extends MetricCollector {
 	
-	int lines;
+	int minLine;
+	int maxLine;
 
 	public LinesMetric(MethodVisitor mv, String cName, int access, String mName, String desc, String signature,
 			String[] exceptions) {
 		super(mv, cName, access, mName, desc, signature, exceptions);
-		this.lines = 0;
+		this.maxLine = Integer.MIN_VALUE;
+		this.minLine = Integer.MAX_VALUE;
 	}
 	
 	@Override
 	public void visitLineNumber(int line, Label start) {
-		if (line > lines)
-			lines = line;
-		super.visitLineNumber(line, start);
+		if (line > maxLine)
+			maxLine = line;
+		if (line < minLine)
+			minLine = line;
 	}
 	
 	@Override
 	public void visitEnd() {
-		System.out.println(cName + ":" + mName + " - " + lines);
-		super.visitEnd();
+		System.out.println(cName + ":" + mName + " - " + (maxLine - minLine + 1) + " lines");
 	}
 
 }

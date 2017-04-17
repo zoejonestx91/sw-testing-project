@@ -14,7 +14,7 @@ import edu.utdallas.metricstool.metrics.LinesMetric;
 
 public class MainMethodVisitor extends MethodVisitor implements Opcodes {
 	
-	private ArrayList<MetricCollector> collectors;
+	private ArrayList<MetricCollector> collectors = null;
 	
 	public MainMethodVisitor(MethodVisitor mv,
 			String cName,
