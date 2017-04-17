@@ -23,11 +23,11 @@ Note that underlined arguments are optional.
 - The plugin's friendly name
 @Metric(String name, String key, ArtifactType artifactType, _MetricType type_, _String description_)
 
-@DependsOnPlugin(String dependency)
+@DependsOn(String dependency)
 - Optional
 - If the referenced plugin cannot be found, then an exception will be thrown.
 
-@WaitForPlugin(String plugin, _ExecutionPhase execPhase_)
+@WaitFor(String plugin, _ExecutionPhase execPhase_)
 
 - Optional
 - For a given artifact, this plugin will not process this artifact until the referenced is processed. If this annotation is used without a 
