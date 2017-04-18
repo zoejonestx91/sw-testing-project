@@ -14,8 +14,8 @@ public class ArgcMetric extends MetricCollector {
 	@Override
 	public void visitEnd() {
 		int argc = 0;
-		if (signature != null) {
-			String args = signature.substring(signature.indexOf('(') + 1, signature.indexOf(')'));
+		if (desc != null) {
+			String args = desc.substring(desc.indexOf('(') + 1, desc.indexOf(')'));
 			boolean inObject = false;
 			for (int i = 0; i < args.length(); i++) {
 				char c = args.charAt(i);

@@ -16,7 +16,7 @@ public class MainMethodVisitor extends MethodVisitor implements Opcodes {
 
 	String cName;
 	String mName;
-	String signature;
+	String desc;
 	
 	private ArrayList<MetricCollector> collectors = null;
 	
@@ -30,16 +30,17 @@ public class MainMethodVisitor extends MethodVisitor implements Opcodes {
 		super(ASM5, mv);
 		this.cName = cName;
 		this.mName = mName;
-		this.signature = signature;
+		this.desc = desc;
 		
 		this.collectors = new ArrayList<MetricCollector>();
 		collectors.add(new NameMetric(mv, cName, access, mName, desc, signature, exceptions));
 		collectors.add(new ArgcMetric(mv, cName, access, mName, desc, signature, exceptions));
 		collectors.add(new VarDecMetric(mv, cName, access, mName, desc, signature, exceptions));
 		collectors.add(new VarRefMetric(mv, cName, access, mName, desc, signature, exceptions));
+		collectors.add(new OperatorMetric(mv, cName, access, mName, desc, signature, exceptions));
 		collectors.add(new LinesMetric(mv, cName, access, mName, desc, signature, exceptions));
 	}
-
+	
 	@Override
 	public AnnotationVisitor visitAnnotation(String arg0, boolean arg1) {
 		for (MetricCollector m : collectors) { m.visitAnnotation(arg0, arg1); }
@@ -66,7 +67,7 @@ public class MainMethodVisitor extends MethodVisitor implements Opcodes {
 
 	@Override
 	public void visitEnd() {
-		System.out.println("\n" + cName + ":" + mName + signature);
+		System.out.println("\n" + cName + ":" + mName + desc);
 		for (MetricCollector m : collectors) { m.visitEnd(); }
 		super.visitEnd();
 	}
