@@ -24,7 +24,8 @@ The following is the list of JHawk method metrics and the class implementing the
 * **Halstead effort**: TODO
 * **Halstead bugs**: TODO
 * **Total depth of nesting**: TODO
-* **Number of casts**: TODO
+* **Number of casts**: `CastMetric`
+  * Currently only handles explicit downcasts.
 * **Number of loops**: TODO
 * **Number of operators**: `OperatorMetric`
   * [http://docs.oracle.com/javase/specs/jls/se8/html/jls-3.html#jls-3.12](http://docs.oracle.com/javase/specs/jls/se8/html/jls-3.html#jls-3.12)
@@ -34,7 +35,7 @@ The following is the list of JHawk method metrics and the class implementing the
 * **Number of operands**: TODO
 * **Class References**: TODO
 * **External methods**: TODO
-* **Local methods**: TODO
+* **Local methods**: `LocalMethodsMetric`
 * **Exceptions referenced**: TODO
 * **Exceptions thrown**: TODO
 * **Modifiers**: TODO

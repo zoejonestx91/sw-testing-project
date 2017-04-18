@@ -14,6 +14,7 @@ public class OperatorMetric extends MetricCollector {
 	public OperatorMetric(MethodVisitor mv, String cName, int access, String mName, String desc, String signature,
 			String[] exceptions) {
 		super(mv, cName, access, mName, desc, signature, exceptions);
+		count = 0;
 		operators = new HashSet<Integer>();
 	}
 	
@@ -134,6 +135,16 @@ public class OperatorMetric extends MetricCollector {
 		else if (  opcode == IFLE || opcode == IF_ICMPLE) {
 			count++;
 			operators.add(IFLE);
+		}
+	}
+
+	@Override
+	public void visitVarInsn(int opcode, int var) {
+		// =
+		if (       opcode == ISTORE || opcode == LSTORE || opcode == FSTORE || opcode == DSTORE
+				|| opcode == ASTORE) {
+			count++;
+			operators.add(ISTORE);
 		}
 	}
 

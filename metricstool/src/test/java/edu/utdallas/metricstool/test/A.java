@@ -41,6 +41,7 @@ public class A {
 	public static void main(String[] args) {
 		m1();
 		m2();
+		new A().sum(3, 4);
 	}
 	public static void m1() {
 		int a=1;
@@ -156,5 +157,13 @@ public class A {
 		--y;
 		++y;
 		return y + x;
+	}
+	public static void m21() {
+		String x = "test";
+		int y = 3;
+		double z = (double) y;
+		Object o = (Object) x;
+		String s = (String) o;
+		Character c = '3';
 	}
 }
