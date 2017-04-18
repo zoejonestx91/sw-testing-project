@@ -13,6 +13,8 @@ public class VarDecMetric extends MetricCollector {
 			String[] exceptions) {
 		super(mv, cName, access, mName, desc, signature, exceptions);
 		this.count = 0;
+		if ((access & ACC_STATIC) == 0)
+			this.count--; // Correct for "declaration" of `this`
 	}
 	
 	@Override
