@@ -10,6 +10,7 @@ The following is the list of JHawk method metrics and the class implementing the
 * **Number of Comment Lines**: N/A
   * Unable to be implemented since bytecode contains no information about comments.
 * **Variable Declarations**: `VarDecMetric`
+  * It is possible for declared but unused variables to be placed on the stack such that the existence of unused variables can be inferred, but it can be impossible to determine how many there are due to differently-sized data types. As a result, this tool only counts declarations of used variables.
 * **Variable References**: `VarRefMetric`
 * **Number of statements**: TODO
   * [http://docs.oracle.com/javase/specs/jls/se8/html/jls-14.html](http://docs.oracle.com/javase/specs/jls/se8/html/jls-14.html)
@@ -30,7 +31,6 @@ The following is the list of JHawk method metrics and the class implementing the
   * [https://docs.oracle.com/javase/tutorial/java/nutsandbolts/operators.html](https://docs.oracle.com/javase/tutorial/java/nutsandbolts/operators.html)
   * `instanceof` is considered an operator.
   * Certain operators listed in the Java specification and tutorials are implemented in bytecode in terms of other operators. We do not attempt to detect such operators. Examples include `~` (bitwise complement implemented via `^`, the bitwise XOR operator) and `?:` (the conditional ternary operator).
-  * Operators are considered to have types. For instance, an operator that adds two doubles is not the same operator as that which adds integers, even though they are both represented by `+`. For this reason there may appear to be more unique operators than there actually are in the source code. We also consider operators that compare against 0 to be their own operators, even though they could be implemented by other comparison operators for the corresponding type.
 * **Number of operands**: TODO
 * **Class References**: TODO
 * **External methods**: TODO
@@ -39,3 +39,4 @@ The following is the list of JHawk method metrics and the class implementing the
 * **Exceptions thrown**: TODO
 * **Modifiers**: TODO
 * **Lines of Code**: `LinesMetric`
+  * Counts the number of lines that have a direct representation in the bytecode. Blank lines, comments, and some source (such as variable declarations) are not reflected in this count.

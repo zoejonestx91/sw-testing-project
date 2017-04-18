@@ -24,6 +24,20 @@ public class A {
 	public int sum(int a, int b) {
 		return a + b;
 	}
+	
+	public int sum(int a, int b, int c) {
+		return a + b + c;
+	}
+	
+	public int sum(int a, int b, int c, int d) {
+		int e = a + b;
+		return e + c + d;
+	}
+	
+	public double sum(int a, long b, double c, float d, short e, byte f, char g) {
+		return a + b + c + d + e + f + g;
+	}
+	
 	public static void main(String[] args) {
 		m1();
 		m2();
@@ -41,6 +55,7 @@ public class A {
 		int a = x;
 		int m,n,o,p,q;
 		String z = "";
+		// have a comment
 		boolean b = true;
 		for (int i = 0; i < 30; i++) {
 			if (b) {
@@ -68,7 +83,9 @@ public class A {
 	public static void m5() {
 		double a = 3;
 		double b = 4;
+		double s;
 		boolean c = a > b;
+		double t;
 		return;
 	}
 	public static void m6() {
@@ -116,5 +133,19 @@ public class A {
 	}
 	public static void m15(int[][] x, boolean b, String[] y, int z, long a) {
 		return;
+	}
+	public static int m16(int x) {
+		x = x >> 2;
+		x = x >>> 3;
+		return x;
+	}
+	public static boolean m17(boolean a, boolean b) {
+		return a && b;
+	}
+	public static boolean m18(long x, long y) {
+		return x > y;
+	}
+	public static boolean m19(long x, long y) {
+		return x == y;
 	}
 }
