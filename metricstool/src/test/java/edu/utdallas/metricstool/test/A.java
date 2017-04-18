@@ -148,4 +148,13 @@ public class A {
 	public static boolean m19(long x, long y) {
 		return x == y;
 	}
+	public static int m20(int x) {
+		int y = -20;
+		y--;
+		y--;
+		y++;
+		--y;
+		++y;
+		return y + x;
+	}
 }

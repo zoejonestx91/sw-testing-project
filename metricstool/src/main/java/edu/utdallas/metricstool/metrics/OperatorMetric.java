@@ -22,6 +22,20 @@ public class OperatorMetric extends MetricCollector {
 	}
 
 	@Override
+	public void visitIincInsn(int var, int increment) {
+		// ++
+		if (increment == 1) {
+			count++;
+			operators.add(IINC);
+		}
+		// --
+		if (increment == -1) {
+			count++;
+			operators.add(-2); // Stand-in for decrement
+		}
+	}
+
+	@Override
 	public void visitInsn(int opcode) {
 		// =
 		if (       opcode == ISTORE || opcode == LSTORE || opcode == FSTORE || opcode == DSTORE
@@ -125,6 +139,7 @@ public class OperatorMetric extends MetricCollector {
 
 	@Override
 	public void visitTypeInsn(int opcode, String type) {
+		// instanceof
 		if (opcode == INSTANCEOF) {
 			count++;
 			operators.add(opcode);
