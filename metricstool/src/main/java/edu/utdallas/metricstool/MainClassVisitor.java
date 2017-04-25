@@ -6,14 +6,18 @@ import org.objectweb.asm.Opcodes;
 
 public class MainClassVisitor extends ClassVisitor implements Opcodes {
 
-	String cName;
+	String cName = null;
 	
-    public MainClassVisitor(final ClassVisitor cv, String cName) {
+    public MainClassVisitor(final ClassVisitor cv) {
         super(ASM5, cv);
-        this.cName = cName;
     }
 
     @Override
+	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
+		this.cName = name;
+	}
+
+	@Override
     public MethodVisitor visitMethod(final int access, final String name,
             final String desc, final String signature, final String[] exceptions) {
         MethodVisitor mv = cv.visitMethod(access, name, desc, signature, exceptions);
