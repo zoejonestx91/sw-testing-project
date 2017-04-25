@@ -17,6 +17,7 @@ public class CastMetric extends MetricCollector {
 	
 	@Override
 	public void visitTypeInsn(int opcode, String type) {
+		// Catches explicit downcasts.
 		if (opcode == CHECKCAST)
 			count++;
 	}

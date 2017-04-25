@@ -8,7 +8,7 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.TypePath;
 
-public class MetricCollector extends MethodVisitor implements Opcodes {
+public class MetricCollector extends MethodVisitor implements Opcodes, MetricMarker {
 
 	protected String cName;
 	protected int access;
