@@ -1,0 +1,5 @@
+- Bonus points for maven integration
+- Plugin mechanism
+- Sequencer
+- Multiple output formats? CSV, XML, JSON
+- JGraphT

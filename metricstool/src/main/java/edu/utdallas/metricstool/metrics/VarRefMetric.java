@@ -1,11 +1,9 @@
 package edu.utdallas.metricstool.metrics;
 
-import java.util.HashSet;
-
-import org.objectweb.asm.Label;
+import edu.utdallas.metricstool.MetricCollector;
 import org.objectweb.asm.MethodVisitor;
 
-import edu.utdallas.metricstool.MetricCollector;
+import java.util.HashSet;
 
 public class VarRefMetric extends MetricCollector {
 	

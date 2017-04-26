@@ -1,9 +1,11 @@
 package edu.utdallas.metricstool.tables;
 
+import java.io.Serializable;
+
 /**
  * Used to store information on the column.
  */
-public class Column implements Comparable<Column> {
+public class Column implements Comparable<Column>, Serializable {
     private String key;
     private String name;
     private Class type;

@@ -2,6 +2,7 @@ package edu.utdallas.metricstool.annotations;
 
 import edu.utdallas.metricstool.annotations.repeatingcontainers.WaitForRepeatingContainer;
 import edu.utdallas.metricstool.enums.ExecutionPhase;
+import edu.utdallas.metricstool.plugins.VisitorPlugin;
 
 import java.lang.annotation.*;
 
@@ -12,6 +13,6 @@ import java.lang.annotation.*;
 @Repeatable(WaitForRepeatingContainer.class)
 @Target(ElementType.TYPE)
 public @interface WaitFor {
-    String value();
-    ExecutionPhase phase() default ExecutionPhase.ALL;
+    Class<VisitorPlugin> value();
+    ExecutionPhase phase();
 }

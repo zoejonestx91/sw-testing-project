@@ -7,7 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * The AnnotationProcessor is a singleton utility class that has miscellaneous methods to help in extracting
+ * annotation information.
  */
 public class AnnotationProcessor {
     private static AnnotationProcessor ourInstance = new AnnotationProcessor();
@@ -31,4 +32,6 @@ public class AnnotationProcessor {
     public List<ExecutionPhase> extractExecInPhases(Class clazz){
         return null;//TODO IMPLEMENT
     }
+
+
 }

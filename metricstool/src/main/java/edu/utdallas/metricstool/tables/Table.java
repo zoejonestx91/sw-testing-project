@@ -2,12 +2,13 @@ package edu.utdallas.metricstool.tables;
 
 import edu.utdallas.metricstool.enums.ArtifactType;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
  * Created by z on 4/10/17.
  */
-public class Table {
+public class Table implements Serializable {
     private Map<String, Column> columns;
     private Map<String, Row> rows;
     private ArtifactType type;

@@ -1,10 +1,9 @@
 package edu.utdallas.metricstool.metrics;
 
-import java.util.HashSet;
-
+import edu.utdallas.metricstool.MetricCollector;
 import org.objectweb.asm.MethodVisitor;
 
-import edu.utdallas.metricstool.MetricCollector;
+import java.util.HashSet;
 
 public class OperatorMetric extends MetricCollector {
 	

@@ -1,9 +1,8 @@
 package edu.utdallas.metricstool.metrics;
 
+import edu.utdallas.metricstool.MetricCollector;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
-
-import edu.utdallas.metricstool.MetricCollector;
 
 public class VarDecMetric extends MetricCollector {
 	

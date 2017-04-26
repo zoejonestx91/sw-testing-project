@@ -1,6 +1,7 @@
 package edu.utdallas.metricstool.annotations;
 
 import edu.utdallas.metricstool.annotations.repeatingcontainers.DependsOnRepeatingContainer;
+import edu.utdallas.metricstool.plugins.VisitorPlugin;
 
 import java.lang.annotation.*;
 
@@ -8,5 +9,5 @@ import java.lang.annotation.*;
 @Repeatable(DependsOnRepeatingContainer.class)
 @Target(ElementType.TYPE)
 public @interface DependsOn {
-    String value();//TODO Replace with concrete type?
+    Class<VisitorPlugin> value();//TODO Replace with concrete type?
 }

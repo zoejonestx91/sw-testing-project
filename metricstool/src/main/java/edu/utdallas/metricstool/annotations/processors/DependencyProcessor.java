@@ -12,12 +12,14 @@ import java.util.List;
  */
 public class DependencyProcessor {
     private static DependencyProcessor ourInstance = new DependencyProcessor();
+    private WaitForProcessor waitForProcessor;
 
     public static DependencyProcessor getInstance() {
         return ourInstance;
     }
 
     private DependencyProcessor() {
+        waitForProcessor = WaitForProcessor.getInstance();
     }
 
     /**
