@@ -7,6 +7,5 @@ public enum ExecutionPhase {
     INSTRUMENTATION,
     TEST,
     POST_PROCESSING,
-    OUTPUT,
-    ALL
+    OUTPUT
 }

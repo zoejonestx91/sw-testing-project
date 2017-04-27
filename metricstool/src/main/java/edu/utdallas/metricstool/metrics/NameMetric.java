@@ -1,8 +1,7 @@
 package edu.utdallas.metricstool.metrics;
 
-import org.objectweb.asm.MethodVisitor;
-
 import edu.utdallas.metricstool.MetricCollector;
+import org.objectweb.asm.MethodVisitor;
 
 public class NameMetric extends MetricCollector {
 	

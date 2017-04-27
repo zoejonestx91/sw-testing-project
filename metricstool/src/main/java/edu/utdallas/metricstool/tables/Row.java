@@ -1,10 +1,11 @@
 package edu.utdallas.metricstool.tables;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 
-public class Row implements Comparable<Row>{
+public class Row implements Comparable<Row>, Serializable{
     private String key;
     private Map<Column, Object> entries;
 
