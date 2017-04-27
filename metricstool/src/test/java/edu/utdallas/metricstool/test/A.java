@@ -1,5 +1,6 @@
 package edu.utdallas.metricstool.test;
 
+// A useful file for ASMifying to see how bytecode relates to source
 public class A {
 	
 	boolean b;
