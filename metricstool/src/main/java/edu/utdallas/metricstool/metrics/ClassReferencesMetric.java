@@ -58,22 +58,22 @@ public class ClassReferencesMetric extends MetricCollector {
 
 	@Override
 	public void visitTypeInsn(int opcode, String type) {
-		classes.add(MTUtils.descFormatToInternal(type));
+		classes.add(MTUtils.descFormatToQualified(type));
 	}
 
 	@Override
 	public void visitFieldInsn(int opcode, String owner, String name, String desc) {
-		classes.add(MTUtils.descFormatToInternal(owner));
+		classes.add(MTUtils.descFormatToQualified(owner));
 	}
 
 	@Override
 	public void visitMethodInsn(int opcode, String owner, String name, String desc) {
-		classes.add(MTUtils.descFormatToInternal(owner));
+		classes.add(MTUtils.descFormatToQualified(owner));
 	}
 
 	@Override
 	public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
-		classes.add(MTUtils.descFormatToInternal(owner));
+		classes.add(MTUtils.descFormatToQualified(owner));
 	}
 
 	@Override
@@ -94,7 +94,7 @@ public class ClassReferencesMetric extends MetricCollector {
 
 	@Override
 	public void visitTryCatchBlock(Label start, Label end, Label handler, String type) {
-		classes.add(MTUtils.descFormatToInternal(type));
+		classes.add(MTUtils.descFormatToQualified(type));
 	}
 
 	@Override
