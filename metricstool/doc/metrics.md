@@ -33,7 +33,7 @@ The following is the list of JHawk method metrics and the class implementing the
   * `instanceof` is considered an operator.
   * Certain operators listed in the Java specification and tutorials are implemented in bytecode in terms of other operators. We do not attempt to detect such operators. Examples include `~` (bitwise complement implemented via `^`, the bitwise XOR operator) and `?:` (the conditional ternary operator).
 * **Number of operands**: TODO
-* **Class References**: TODO
+* **Class References**: `ClassReferencesMetric`
 * **External methods**: TODO
 * **Local methods**: `LocalMethodsMetric`
 * **Exceptions referenced**: TODO

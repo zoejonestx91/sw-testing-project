@@ -1,5 +1,6 @@
 package edu.utdallas.metricstool.metrics;
 
+import edu.utdallas.metricstool.MTUtils;
 import edu.utdallas.metricstool.MetricCollector;
 import org.objectweb.asm.MethodVisitor;
 
@@ -12,33 +13,7 @@ public class ArgcMetric extends MetricCollector {
 	
 	@Override
 	public void visitEnd() {
-		int argc = 0;
-		if (desc != null) {
-			String args = desc.substring(desc.indexOf('(') + 1, desc.indexOf(')'));
-			boolean inObject = false;
-			boolean inArray = false;
-			for (int i = 0; i < args.length(); i++) {
-				char c = args.charAt(i);
-				if (inObject) {
-					if (c == ';')
-						inObject = false;
-				} else {
-					if (inArray) {
-						if (c != '[')
-							inArray = false;
-						if (c == 'L')
-							inObject = true;
-					} else {
-						argc++;
-						if (c == 'L')
-							inObject = true;
-						else if (c == '[')
-							inArray = true;
-					}
-				}
-			}
-		}
-		System.out.println("Number of Arguments: " +  argc);
+		System.out.println("Number of Arguments: " +  MTUtils.parseDescArgs(desc).size());
 	}
 
 }
