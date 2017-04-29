@@ -34,7 +34,7 @@ The following is the list of JHawk method metrics and the class implementing the
   * Certain operators listed in the Java specification and tutorials are implemented in bytecode in terms of other operators. We do not attempt to detect such operators. Examples include `~` (bitwise complement implemented via `^`, the bitwise XOR operator) and `?:` (the conditional ternary operator).
 * **Number of operands**: TODO
 * **Class References**: `ClassReferencesMetric`
-* **External methods**: TODO
+* **External methods**: `ExternalMethodsMetric`
 * **Local methods**: `LocalMethodsMetric`
 * **Exceptions referenced**: `ExceptionsReferencedMetric`
   * This metric relies on the heuristic that exception class names end with `Exception`.
