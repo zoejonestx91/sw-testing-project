@@ -34,10 +34,12 @@ The following is the list of JHawk method metrics and the class implementing the
   * Certain operators listed in the Java specification and tutorials are implemented in bytecode in terms of other operators. We do not attempt to detect such operators. Examples include `~` (bitwise complement implemented via `^`, the bitwise XOR operator) and `?:` (the conditional ternary operator).
 * **Number of operands**: TODO
 * **Class References**: `ClassReferencesMetric`
-* **External methods**: TODO
+* **External methods**: `ExternalMethodsMetric`
 * **Local methods**: `LocalMethodsMetric`
-* **Exceptions referenced**: TODO
-* **Exceptions thrown**: TODO
+* **Exceptions referenced**: `ExceptionsReferencedMetric`
+  * This metric relies on the heuristic that exception class names end with `Exception`.
+* **Exceptions thrown**: `ExceptionsThrownMetric`
+  * This metric is limited to the exceptions listed as being thrown in the method signature. There may be other exceptions (or children of listed exceptions) that are not included in the signature.
 * **Modifiers**: TODO
 * **Lines of Code**: `LinesMetric`
   * Counts the number of lines that have a direct representation in the bytecode. Blank lines, comments, and some source (such as variable declarations) are not reflected in this count.

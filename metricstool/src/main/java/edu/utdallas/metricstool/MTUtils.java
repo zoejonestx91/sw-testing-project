@@ -49,7 +49,7 @@ public class MTUtils {
 	}
 	
 	// Converts an argument from the description format to the qualified format
-	public static String descFormatToInternal(String name) {
+	public static String descFormatToQualified(String name) {
 		int count = 0;
 		String newName = "";
 		for (int i = 0; i < name.length(); i++) {
@@ -89,7 +89,7 @@ public class MTUtils {
 					char d = desc.charAt(j);
 					if (d == ';' && sem == 0) {
 						String name = desc.substring(i, j + 1);
-						names.add(descFormatToInternal(name));
+						names.add(descFormatToQualified(name));
 						break;
 					} else if (d == 'L' && (desc.charAt(j - 1) == ';' || desc.charAt(j - 1) == '<')) {
 						sem++;

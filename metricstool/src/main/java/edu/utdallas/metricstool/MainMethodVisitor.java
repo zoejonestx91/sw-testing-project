@@ -32,8 +32,12 @@ public class MainMethodVisitor extends MethodVisitor implements Opcodes {
 		collectors.add(new VarRefMetric(mv, cName, access, mName, desc, signature, exceptions));
 		collectors.add(new CastMetric(mv, cName, access, mName, desc, signature, exceptions));
 		collectors.add(new OperatorMetric(mv, cName, access, mName, desc, signature, exceptions));
-		collectors.add(new ClassReferencesMetric(mv, cName, access, mName, desc, signature, exceptions));
+		ClassReferencesMetric crm = new ClassReferencesMetric(mv, cName, access, mName, desc, signature, exceptions);
+		collectors.add(crm);
+		collectors.add(new ExternalMethodsMetric(mv, cName, access, mName, desc, signature, exceptions));
 		collectors.add(new LocalMethodsMetric(mv, cName, access, mName, desc, signature, exceptions));
+		collectors.add(new ExceptionsReferencedMetric(mv, cName, access, mName, desc, signature, exceptions, crm));
+		collectors.add(new ExceptionsThrownMetric(mv, cName, access, mName, desc, signature, exceptions));
 		collectors.add(new LinesMetric(mv, cName, access, mName, desc, signature, exceptions));
 	}
 	
