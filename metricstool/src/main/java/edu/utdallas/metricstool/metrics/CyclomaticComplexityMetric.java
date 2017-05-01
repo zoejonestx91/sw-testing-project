@@ -259,9 +259,6 @@ public class CyclomaticComplexityMetric extends MetricCollector {
 			edges--;
 		}
 		int c = (edges - merges) - (nodes - merges) + 2;
-		System.out.println(edges);
-		System.out.println(merges);
-		System.out.println(nodeData.size() - 1);
 		System.out.println("Cyclomatic Complexity: " + c);
 	}
 	
