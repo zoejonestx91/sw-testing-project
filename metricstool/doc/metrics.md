@@ -3,7 +3,8 @@
 The following is the list of JHawk method metrics and the class implementing them in MetricTool. Some metrics cannot be implemented by MetricTool because inspection of bytecode is insufficient for the task.
 
 * **Name**: `NameMetric`
-* **Cyclomatic Complexity**: TODO
+* **Cyclomatic Complexity**: `CyclomaticComplexityMetric`
+  * This metric is actually not implemented using any explicit graph analysis. There may be a few corner cases that are not handled, such as thrown exceptions, finally clauses, and switch statements.
 * **Number of Arguments**: `ArgcMetric`
 * **Number of Comments**: N/A
   * Unable to be implemented since bytecode contains no information about comments.

@@ -4,6 +4,7 @@ import edu.utdallas.metricstool.MetricCollector;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map.Entry;
 
 import org.objectweb.asm.AnnotationVisitor;
@@ -16,10 +17,11 @@ import org.objectweb.asm.TypePath;
 public class CyclomaticComplexityMetric extends MetricCollector {
 	
 	HashMap<Label, NodeData> nodeData; // should only be used via getNodeData()
+	HashSet<Label> dests;
 	
 	int edges;
+	int returns;
 	
-	boolean jumped;
 	boolean lastGoto;
 	Label lastLabel;
 	
@@ -29,8 +31,9 @@ public class CyclomaticComplexityMetric extends MetricCollector {
 			String[] exceptions) {
 		super(mv, cName, access, mName, desc, signature, exceptions);
 		nodeData = new HashMap<Label, NodeData>();
+		dests = null;
 		edges = 0;
-		jumped = false;
+		returns = 0;
 		lastGoto = false;
 		lastLabel = null;
 	}
@@ -92,8 +95,10 @@ public class CyclomaticComplexityMetric extends MetricCollector {
 
 	@Override
 	public void visitInsn(int opcode) {
-		if (opcode == IRETURN) {
+		if (opcode == IRETURN || opcode == LRETURN || opcode == FRETURN || opcode == DRETURN || opcode == ARETURN || opcode == RETURN) {
 			lastGoto = true;
+			returns++;
+			edges++;
 		} else {
 			lastGoto = false;
 		}
@@ -145,20 +150,22 @@ public class CyclomaticComplexityMetric extends MetricCollector {
 			lnd.next = MANY;
 		if (opcode == GOTO || opcode == JSR) { // goto instructions
 			lastGoto = true;
-			edges++;
+			if (dests.add(label))
+				edges++;
 		} else { // if instructions
 			lastGoto = false;
-			if (!jumped)
-				edges += 3;
-			jumped = true;
+			if (dests.add(label))
+				edges++;
 		}
 	}
 
 	@Override
 	public void visitLabel(Label label) {
+		dests = new HashSet<Label>();
 		NodeData nd = getNodeData(label);
 		if (!lastGoto && lastLabel != null) {
 			nd.in++; // fall-through from last label
+			edges++;
 			NodeData lnd = getNodeData(lastLabel);
 			if (lnd.next == null) {
 				lnd.next = nd.label; // last only falls here for now
@@ -166,7 +173,6 @@ public class CyclomaticComplexityMetric extends MetricCollector {
 				lnd.next = MANY; // last falls through but also goes elsewhere
 			}
 		}
-		jumped = false;
 		lastLabel = label;
 		lastGoto = false;
 	}
@@ -238,16 +244,24 @@ public class CyclomaticComplexityMetric extends MetricCollector {
 	@Override
 	public void visitEnd() {
 		nodeData.get(lastLabel).in = 0;
-		int n = nodeData.size() - 1;
+		int merges = 0;
 		for (Entry<Label, NodeData> e : nodeData.entrySet()) {
 			NodeData nd = e.getValue();
 			if (nd.next == null || nd.next == MANY)
 				continue;
 			NodeData ndnext = nodeData.get(nd.next);
 			if (ndnext.in == 1)
-				n--;
+				merges++;
 		}
-		int c = edges - n + 2;
+		int nodes = nodeData.size();
+		if (returns == 1) {
+			nodes--; // account for a single return node that can be merged
+			edges--;
+		}
+		int c = (edges - merges) - (nodes - merges) + 2;
+		System.out.println(edges);
+		System.out.println(merges);
+		System.out.println(nodeData.size() - 1);
 		System.out.println("Cyclomatic Complexity: " + c);
 	}
 	
