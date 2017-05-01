@@ -1,9 +1,5 @@
 package edu.utdallas.metricstool;
 
-import edu.utdallas.metricstool.enums.ArtifactType;
-import edu.utdallas.metricstool.output.DelimiterSeparatedOutput;
-import edu.utdallas.metricstool.output.Output;
-import edu.utdallas.metricstool.tables.TableStore;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -35,12 +31,12 @@ public class MetricsMojo extends AbstractMojo {
 	    		runMetrics(new File(base + sep + s.replace('.', sep) + ".class"));
 	    	}
 		}
-		Output out = new DelimiterSeparatedOutput();
+		/*Output out = new DelimiterSeparatedOutput();
 		try {
 			out.write(System.out, out.getDefaultConfig(), TableStore.getInstance().getTable(ArtifactType.METHOD));
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 	
 	private void runMetrics(File file) {

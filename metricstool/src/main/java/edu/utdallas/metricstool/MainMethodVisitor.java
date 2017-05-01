@@ -2,7 +2,6 @@ package edu.utdallas.metricstool;
 
 import edu.utdallas.metricstool.annotations.processors.MetricsProcessor;
 import edu.utdallas.metricstool.metrics.*;
-import edu.utdallas.metricstool.tables.Row;
 import edu.utdallas.metricstool.tables.Table;
 import org.objectweb.asm.*;
 
@@ -18,6 +17,7 @@ public class MainMethodVisitor extends MethodVisitor implements Opcodes {
 	private ArrayList<MetricCollector> collectors = null;
 	private static boolean columnsInitialized = false;
 	private static MetricsProcessor metricsProcessor = MetricsProcessor.getInstance();
+	static boolean printedHeader = false;
 	
 	public MainMethodVisitor(MethodVisitor mv,
 			String cName,
@@ -47,6 +47,12 @@ public class MainMethodVisitor extends MethodVisitor implements Opcodes {
 		collectors.add(new ExceptionsThrownMetric(mv, cName, access, mName, desc, signature, exceptions));
 		collectors.add(new LinesMetric(mv, cName, access, mName, desc, signature, exceptions));
 
+		if(printedHeader == false) {
+			printedHeader = true;
+			System.out.println("Name, Cyclomatic Complexity, Argument count, Variable Declarations," +
+					" Variable References, Casts, Operator Count, Class References, External Methods," +
+					" Local Methods, Exceptions Referenced, Exceptions Thrown, Lines");
+		}
 		/*if(columnsInitialized == false){
 			methodTable = TableStore.getInstance().getTable(ArtifactType.METHOD);
 			initColumns();
@@ -88,9 +94,9 @@ public class MainMethodVisitor extends MethodVisitor implements Opcodes {
 
 	@Override
 	public void visitEnd() {
-		System.out.println("\n" + cName + ":" + mName + desc);
-		Row currentRow = methodTable.addRow(cName + ":" + mName + desc);
-		MetricCollector.setCurrentMethodRow(currentRow);
+		System.out.print("\n" + cName + ":" + mName + desc + ",");
+		//Row currentRow = methodTable.addRow(cName + ":" + mName + desc);
+		//MetricCollector.setCurrentMethodRow(currentRow);
 		//for (MetricCollector m : collectors) { m.visitEnd(); }
 		for(int i = 0; i < collectors.size(); i++){
 			collectors.get(i).visitEnd();
