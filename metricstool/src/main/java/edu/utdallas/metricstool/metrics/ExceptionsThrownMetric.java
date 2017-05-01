@@ -1,15 +1,20 @@
 package edu.utdallas.metricstool.metrics;
 
+import edu.utdallas.metricstool.MTUtils;
+import edu.utdallas.metricstool.MetricCollector;
+import edu.utdallas.metricstool.annotations.InjectColumn;
+import edu.utdallas.metricstool.annotations.Metric;
+import edu.utdallas.metricstool.enums.ArtifactType;
+import edu.utdallas.metricstool.tables.Column;
+import org.objectweb.asm.MethodVisitor;
+
 import java.util.Arrays;
 import java.util.Iterator;
 
-import org.objectweb.asm.MethodVisitor;
-
-import edu.utdallas.metricstool.MTUtils;
-import edu.utdallas.metricstool.MetricCollector;
-
+@Metric(key = "exceptthrown", name = "Exceptions Thrown", artifactType = ArtifactType.METHOD)
 public class ExceptionsThrownMetric extends MetricCollector {
-
+	@InjectColumn(key = "exceptthrown", type = ArtifactType.METHOD)
+	static Column column;
 	public ExceptionsThrownMetric(MethodVisitor mv, String cName, int access, String mName, String desc, String signature,
 			String[] exceptions) {
 		super(mv, cName, access, mName, desc, signature, exceptions);
@@ -34,7 +39,7 @@ public class ExceptionsThrownMetric extends MetricCollector {
 	
 	@Override
 	public void visitEnd() {
-		System.out.println("Exceptions Thrown: " + getExceptions());
+		System.out.print(getExceptions());
 	}
 
 }

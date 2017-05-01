@@ -1,12 +1,19 @@
 package edu.utdallas.metricstool.metrics;
 
 import edu.utdallas.metricstool.MetricCollector;
+import edu.utdallas.metricstool.annotations.InjectColumn;
+import edu.utdallas.metricstool.annotations.Metric;
+import edu.utdallas.metricstool.enums.ArtifactType;
+import edu.utdallas.metricstool.tables.Column;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 
+@Metric(key = "vardecs", name = "Variable Declarations", artifactType = ArtifactType.METHOD, metricType = Integer.class)
 public class VarDecMetric extends MetricCollector {
 	
 	int count;
+	@InjectColumn(key = "vardecs", type = ArtifactType.METHOD)
+	static Column column;
 
 	public VarDecMetric(MethodVisitor mv, String cName, int access, String mName, String desc, String signature,
 			String[] exceptions) {
@@ -15,7 +22,7 @@ public class VarDecMetric extends MetricCollector {
 		if ((access & ACC_STATIC) == 0)
 			this.count--; // Correct for "declaration" of `this`
 	}
-	
+
 	@Override
 	public void visitLocalVariable(String name, String desc, String signature, Label start, Label end, int index) {
 		count ++;
@@ -23,7 +30,7 @@ public class VarDecMetric extends MetricCollector {
 
 	@Override
 	public void visitEnd() {
-		System.out.println("Variable Declarations: " + count);
+		System.out.print(count);
 	}
 
 }

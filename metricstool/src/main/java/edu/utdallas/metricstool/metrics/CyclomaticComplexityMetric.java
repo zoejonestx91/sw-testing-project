@@ -1,18 +1,11 @@
 package edu.utdallas.metricstool.metrics;
 
 import edu.utdallas.metricstool.MetricCollector;
+import org.objectweb.asm.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
-
-import org.objectweb.asm.AnnotationVisitor;
-import org.objectweb.asm.Attribute;
-import org.objectweb.asm.Handle;
-import org.objectweb.asm.Label;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.TypePath;
 
 public class CyclomaticComplexityMetric extends MetricCollector {
 	
@@ -259,7 +252,7 @@ public class CyclomaticComplexityMetric extends MetricCollector {
 			edges--;
 		}
 		int c = (edges - merges) - (nodes - merges) + 2;
-		System.out.println("Cyclomatic Complexity: " + c);
+		System.out.print(c);
 	}
 	
 	private class NodeData {

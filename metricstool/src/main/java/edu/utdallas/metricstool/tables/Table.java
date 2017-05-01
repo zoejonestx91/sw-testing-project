@@ -3,7 +3,10 @@ package edu.utdallas.metricstool.tables;
 import edu.utdallas.metricstool.enums.ArtifactType;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Created by z on 4/10/17.
@@ -16,7 +19,8 @@ public class Table implements Serializable {
 
     public Table(ArtifactType type) {
         this.type = type;
-
+        columns = new TreeMap<>();
+        rows = new TreeMap<>();
     }
 
     public void addColumn(Column column){
@@ -26,6 +30,22 @@ public class Table implements Serializable {
 
     public Column getColumn(String key){
         return columns.get(key);
+    }
+
+    public Map<String, Column> getColumns(){
+        return columns;
+    }
+
+    public Map<String, Row> getRows(){
+        return rows;
+    }
+
+    public List<String> getColumnNameList(){
+        List<String> list = new ArrayList<>();
+        for (Column column: columns.values()) {
+            list.add(column.getName());
+        }
+        return list;
     }
 
     /*

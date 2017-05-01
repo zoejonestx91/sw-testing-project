@@ -46,11 +46,11 @@ public class SerializedOutput implements Output {//TODO IMPLEMENT EVENTUALLY
      *
      * @param outputStream
      * @param config
-     * @param tables
+     * @param table
      * @throws IOException
      */
     @Override
-    public void write(OutputStream outputStream, Map<String, Object> config, Table... tables) throws IOException {
+    public void write(OutputStream outputStream, Map<String, Object> config, Table table) throws IOException {
 
     }
 

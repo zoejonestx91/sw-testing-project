@@ -1,6 +1,10 @@
 package edu.utdallas.metricstool.metrics;
 
 import edu.utdallas.metricstool.MetricCollector;
+import edu.utdallas.metricstool.annotations.InjectColumn;
+import edu.utdallas.metricstool.annotations.Metric;
+import edu.utdallas.metricstool.enums.ArtifactType;
+import edu.utdallas.metricstool.tables.Column;
 import edu.utdallas.metricstool.utils.AccessBitflagConverter;
 import org.objectweb.asm.MethodVisitor;
 
@@ -9,8 +13,12 @@ import java.util.ArrayList;
 /**
  * This metric outputs a method's modifiers.
  */
+@Metric(key = "modifiers", name = "Modifiers", artifactType = ArtifactType.METHOD)
 public class ModifierMetric extends MetricCollector {
     int access;
+    @InjectColumn(key = "modifiers", type = ArtifactType.METHOD)
+    static Column column;
+
     public ModifierMetric(MethodVisitor mv, String cName, int access, String mName, String desc, String signature, String[] exceptions) {
         super(mv, cName, access, mName, desc, signature, exceptions);
         this.access = access;
@@ -32,6 +40,6 @@ public class ModifierMetric extends MetricCollector {
                 output.append(", ");
             }
         }
-        System.out.println("Modifiers: " + output);
+        System.out.print(output);
     }
 }

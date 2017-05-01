@@ -1,13 +1,19 @@
 package edu.utdallas.metricstool.metrics;
 
+import edu.utdallas.metricstool.MetricCollector;
+import edu.utdallas.metricstool.annotations.InjectColumn;
+import edu.utdallas.metricstool.annotations.Metric;
+import edu.utdallas.metricstool.enums.ArtifactType;
+import edu.utdallas.metricstool.tables.Column;
 import org.objectweb.asm.MethodVisitor;
 
-import edu.utdallas.metricstool.MetricCollector;
-
 // TODO: Handle implicit casts.
+@Metric(key="castc", name="Cast Count", metricType = Integer.class, artifactType = ArtifactType.METHOD)
 public class CastMetric extends MetricCollector {
 	
 	int count;
+	@InjectColumn(key = "castc", type = ArtifactType.METHOD)
+	static Column column;
 
 	public CastMetric(MethodVisitor mv, String cName, int access, String mName, String desc, String signature,
 			String[] exceptions) {
@@ -24,7 +30,7 @@ public class CastMetric extends MetricCollector {
 
 	@Override
 	public void visitEnd() {
-		System.out.println("Number of Casts: " + count);
+		System.out.print(count );
 	}
 
 }

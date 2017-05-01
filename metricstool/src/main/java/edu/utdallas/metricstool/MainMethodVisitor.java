@@ -1,6 +1,9 @@
 package edu.utdallas.metricstool;
 
+import edu.utdallas.metricstool.annotations.processors.MetricsProcessor;
 import edu.utdallas.metricstool.metrics.*;
+import edu.utdallas.metricstool.tables.Row;
+import edu.utdallas.metricstool.tables.Table;
 import org.objectweb.asm.*;
 
 import java.util.ArrayList;
@@ -10,8 +13,11 @@ public class MainMethodVisitor extends MethodVisitor implements Opcodes {
 	String cName;
 	String mName;
 	String desc;
+	static Table methodTable;
 	
 	private ArrayList<MetricCollector> collectors = null;
+	private static boolean columnsInitialized = false;
+	private static MetricsProcessor metricsProcessor = MetricsProcessor.getInstance();
 	
 	public MainMethodVisitor(MethodVisitor mv,
 			String cName,
@@ -40,8 +46,22 @@ public class MainMethodVisitor extends MethodVisitor implements Opcodes {
 		collectors.add(new ExceptionsReferencedMetric(mv, cName, access, mName, desc, signature, exceptions, crm));
 		collectors.add(new ExceptionsThrownMetric(mv, cName, access, mName, desc, signature, exceptions));
 		collectors.add(new LinesMetric(mv, cName, access, mName, desc, signature, exceptions));
+
+		/*if(columnsInitialized == false){
+			methodTable = TableStore.getInstance().getTable(ArtifactType.METHOD);
+			initColumns();
+			columnsInitialized = true;
+		}*/
+
+
 	}
-	
+
+	private void initColumns() {
+		for (MetricCollector m: collectors) {
+			metricsProcessor.process(m);
+		}
+	}
+
 	@Override
 	public AnnotationVisitor visitAnnotation(String arg0, boolean arg1) {
 		for (MetricCollector m : collectors) { m.visitAnnotation(arg0, arg1); }
@@ -69,7 +89,15 @@ public class MainMethodVisitor extends MethodVisitor implements Opcodes {
 	@Override
 	public void visitEnd() {
 		System.out.println("\n" + cName + ":" + mName + desc);
-		for (MetricCollector m : collectors) { m.visitEnd(); }
+		Row currentRow = methodTable.addRow(cName + ":" + mName + desc);
+		MetricCollector.setCurrentMethodRow(currentRow);
+		//for (MetricCollector m : collectors) { m.visitEnd(); }
+		for(int i = 0; i < collectors.size(); i++){
+			collectors.get(i).visitEnd();
+			if(i != collectors.size() - 1){
+				System.out.print(",");
+			}
+		}
 		super.visitEnd();
 	}
 

@@ -1,12 +1,8 @@
 package edu.utdallas.metricstool;
 
-import org.objectweb.asm.AnnotationVisitor;
-import org.objectweb.asm.Attribute;
-import org.objectweb.asm.Handle;
-import org.objectweb.asm.Label;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.TypePath;
+import edu.utdallas.metricstool.tables.Row;
+import edu.utdallas.metricstool.tables.Table;
+import org.objectweb.asm.*;
 
 public class MetricCollector extends MethodVisitor implements Opcodes, MetricMarker {
 
@@ -16,6 +12,22 @@ public class MetricCollector extends MethodVisitor implements Opcodes, MetricMar
 	protected String desc;
 	protected String signature;
 	protected String[] exceptions;
+
+
+	protected static Row currentMethodRow;
+	public static Row getCurrentMethodRow() {
+		return currentMethodRow;
+	}
+
+	public static void setCurrentMethodRow(Row currentMethodRow) {
+		MetricCollector.currentMethodRow = currentMethodRow;
+	}
+
+	public void initColumns(Table table){
+
+	}
+
+
 	
 	public MetricCollector(MethodVisitor mv,
 			String cName,

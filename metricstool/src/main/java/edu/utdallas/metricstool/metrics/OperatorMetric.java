@@ -1,14 +1,21 @@
 package edu.utdallas.metricstool.metrics;
 
 import edu.utdallas.metricstool.MetricCollector;
+import edu.utdallas.metricstool.annotations.InjectColumn;
+import edu.utdallas.metricstool.annotations.Metric;
+import edu.utdallas.metricstool.enums.ArtifactType;
+import edu.utdallas.metricstool.tables.Column;
 import org.objectweb.asm.MethodVisitor;
 
 import java.util.HashSet;
 
+@Metric(key = "numops", name = "Number of Operators", artifactType = ArtifactType.METHOD, metricType = Integer.class)
 public class OperatorMetric extends MetricCollector {
 	
 	int count;
 	HashSet<Integer> operators;
+	@InjectColumn(key = "numops", type = ArtifactType.METHOD)
+	static Column column;
 
 	public OperatorMetric(MethodVisitor mv, String cName, int access, String mName, String desc, String signature,
 			String[] exceptions) {
@@ -158,7 +165,7 @@ public class OperatorMetric extends MetricCollector {
 
 	@Override
 	public void visitEnd() {
-		System.out.println("Number of Operators: " + count);
+		System.out.print(count);
 	}
 
 }

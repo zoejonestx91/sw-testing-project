@@ -1,17 +1,22 @@
 package edu.utdallas.metricstool.metrics;
 
+import edu.utdallas.metricstool.MTUtils;
+import edu.utdallas.metricstool.MetricCollector;
+import edu.utdallas.metricstool.annotations.InjectColumn;
+import edu.utdallas.metricstool.annotations.Metric;
+import edu.utdallas.metricstool.enums.ArtifactType;
+import edu.utdallas.metricstool.tables.Column;
+import org.objectweb.asm.MethodVisitor;
+
 import java.util.HashSet;
 import java.util.Iterator;
 
-import org.objectweb.asm.Label;
-import org.objectweb.asm.MethodVisitor;
-
-import edu.utdallas.metricstool.MTUtils;
-import edu.utdallas.metricstool.MetricCollector;
-
+@Metric(key = "externmeths", name = "External Methods", artifactType = ArtifactType.METHOD)
 public class ExternalMethodsMetric extends MetricCollector {
 	
 	HashSet<String> methods;
+	@InjectColumn(key = "externmeths", type = ArtifactType.METHOD)
+	static Column column;
 
 	public ExternalMethodsMetric(MethodVisitor mv, String cName, int access, String mName, String desc, String signature,
 			String[] exceptions) {
@@ -42,7 +47,7 @@ public class ExternalMethodsMetric extends MetricCollector {
 	
 	@Override
 	public void visitEnd() {
-		System.out.println("External Methods: " + getExternalMethods());
+		System.out.print(getExternalMethods());
 	}
 
 }
