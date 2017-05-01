@@ -243,7 +243,6 @@ public class CyclomaticComplexityMetric extends MetricCollector {
 	
 	@Override
 	public void visitEnd() {
-		nodeData.get(lastLabel).in = 0;
 		int merges = 0;
 		for (Entry<Label, NodeData> e : nodeData.entrySet()) {
 			NodeData nd = e.getValue();

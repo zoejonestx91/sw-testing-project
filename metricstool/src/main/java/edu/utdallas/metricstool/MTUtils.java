@@ -50,6 +50,8 @@ public class MTUtils {
 	
 	// Converts an argument from the description format to the qualified format
 	public static String descFormatToQualified(String name) {
+		if (name == null || name.equals(""))
+			return "";
 		int count = 0;
 		String newName = "";
 		for (int i = 0; i < name.length(); i++) {

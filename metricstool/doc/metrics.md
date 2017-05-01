@@ -28,12 +28,16 @@ The following is the list of JHawk method metrics and the class implementing the
 * **Number of casts**: `CastMetric`
   * Currently only handles explicit downcasts.
 * **Number of loops**: TODO
-* **Number of operators**: `OperatorMetric`
+* **Number of operators**: `OperationsMetric`
   * [http://docs.oracle.com/javase/specs/jls/se8/html/jls-3.html#jls-3.12](http://docs.oracle.com/javase/specs/jls/se8/html/jls-3.html#jls-3.12)
   * [https://docs.oracle.com/javase/tutorial/java/nutsandbolts/operators.html](https://docs.oracle.com/javase/tutorial/java/nutsandbolts/operators.html)
   * `instanceof` is considered an operator.
   * Certain operators listed in the Java specification and tutorials are implemented in bytecode in terms of other operators. We do not attempt to detect such operators. Examples include `~` (bitwise complement implemented via `^`, the bitwise XOR operator) and `?:` (the conditional ternary operator).
-* **Number of operands**: TODO
+  * Operators are not considered to have a type. As such, the addition operator is considered a single operator regardless of the types of the operands (at the bytecode level these operators may be different).
+* **Number of operands**: `OperationsMetric`
+  * For an expression like `2 + x * 3` we consider there to be 3 operands (`2`, `x`, and `3`) to 2 operators. This is opposed to there being 4 operands (`x`, `3`, `2`, and `x * 3`). As such, we attempt to detect when a stack configuration occurs that uses a previous result as an operand to an operator.
+  * Arrays are probably not handled properly.
+  * Operators that can be used on Strings are not necessarily counted accurately. Notably, String concatenation may be computed statically or using a StringBuilder.
 * **Class References**: `ClassReferencesMetric`
 * **External methods**: `ExternalMethodsMetric`
 * **Local methods**: `LocalMethodsMetric`
