@@ -4,6 +4,7 @@ import edu.utdallas.metricstool.enums.ArtifactType;
 
 import java.io.Serializable;
 import java.util.EnumMap;
+import java.util.Map;
 
 /**
  * TableStore is a singleton class that is responsible for managing Tables. It contains a single Table for each ArtifactType.
@@ -32,6 +33,10 @@ public class TableStore implements Serializable {
 
     public Table getTable(ArtifactType type){
         return tables.get(type);
+    }
+
+    public Map<ArtifactType, Table> getTables(){
+        return tables;
     }
 
     public void clearStore(){

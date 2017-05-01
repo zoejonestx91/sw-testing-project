@@ -1,21 +1,22 @@
 package edu.utdallas.metricstool.metrics;
 
+import edu.utdallas.metricstool.MTUtils;
+import edu.utdallas.metricstool.MetricCollector;
+import edu.utdallas.metricstool.annotations.InjectColumn;
+import edu.utdallas.metricstool.annotations.Metric;
+import edu.utdallas.metricstool.enums.ArtifactType;
+import edu.utdallas.metricstool.tables.Column;
+import org.objectweb.asm.*;
+
 import java.util.HashSet;
 import java.util.Iterator;
 
-import org.objectweb.asm.AnnotationVisitor;
-import org.objectweb.asm.Attribute;
-import org.objectweb.asm.Handle;
-import org.objectweb.asm.Label;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.TypePath;
-
-import edu.utdallas.metricstool.MTUtils;
-import edu.utdallas.metricstool.MetricCollector;
-
+@Metric(key = "classrefs", name = "Class References", artifactType = ArtifactType.METHOD)
 public class ClassReferencesMetric extends MetricCollector {
 	
 	HashSet<String> classes;
+	@InjectColumn(key = "classrefs", type = ArtifactType.METHOD)
+	static Column column = null;
 
 	public ClassReferencesMetric(MethodVisitor mv, String cName, int access, String mName, String desc, String signature,
 			String[] exceptions) {
@@ -110,7 +111,7 @@ public class ClassReferencesMetric extends MetricCollector {
 
 	@Override
 	public void visitEnd() {
-		System.out.println("Class References: " + getClasses());
+		System.out.print(getClasses());
 	}
 
 }

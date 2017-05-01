@@ -1,16 +1,20 @@
 package edu.utdallas.metricstool.metrics;
 
-import java.util.HashSet;
-import java.util.Iterator;
-
-import org.objectweb.asm.Label;
+import edu.utdallas.metricstool.MetricCollector;
+import edu.utdallas.metricstool.annotations.InjectColumn;
+import edu.utdallas.metricstool.annotations.Metric;
+import edu.utdallas.metricstool.enums.ArtifactType;
+import edu.utdallas.metricstool.tables.Column;
 import org.objectweb.asm.MethodVisitor;
 
-import edu.utdallas.metricstool.MetricCollector;
-
+import java.util.HashSet;
+import java.util.Iterator;
+@Metric(key = "localmeths", name = "Local Methods", artifactType = ArtifactType.METHOD)
 public class LocalMethodsMetric extends MetricCollector {
 	
 	HashSet<String> methods;
+	@InjectColumn(key = "localmeths", type = ArtifactType.METHOD)
+	static Column column;
 
 	public LocalMethodsMetric(MethodVisitor mv, String cName, int access, String mName, String desc, String signature,
 			String[] exceptions) {
@@ -41,7 +45,7 @@ public class LocalMethodsMetric extends MetricCollector {
 	
 	@Override
 	public void visitEnd() {
-		System.out.println("Local Methods: " + getLocalMethods());
+		System.out.print( getLocalMethods());
 	}
 
 }

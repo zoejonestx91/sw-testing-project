@@ -1,10 +1,5 @@
 package edu.utdallas.metricstool;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -12,6 +7,11 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 @Mojo( name = "metrics" )
 public class MetricsMojo extends AbstractMojo {
@@ -31,6 +31,12 @@ public class MetricsMojo extends AbstractMojo {
 	    		runMetrics(new File(base + sep + s.replace('.', sep) + ".class"));
 	    	}
 		}
+		/*Output out = new DelimiterSeparatedOutput();
+		try {
+			out.write(System.out, out.getDefaultConfig(), TableStore.getInstance().getTable(ArtifactType.METHOD));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}*/
 	}
 	
 	private void runMetrics(File file) {

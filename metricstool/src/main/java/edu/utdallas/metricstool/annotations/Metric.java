@@ -16,7 +16,7 @@ import java.lang.annotation.*;
 public @interface Metric {
     String name();
     String key();
-    Class<?> metricType();
+    Class<?> metricType() default String.class;
     ArtifactType artifactType();
     String description() default "";
 }

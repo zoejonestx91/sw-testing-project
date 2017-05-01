@@ -5,6 +5,7 @@ import edu.utdallas.metricstool.tables.TableStore;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -21,7 +22,9 @@ public interface Output {
      * @param outputStream The outputstream to write to.
      * @throws IOException
      */
-    public void write(OutputStream outputStream) throws IOException;
+    default void write(OutputStream outputStream) throws IOException{
+        write(outputStream, new HashMap<String, Object>(), TableStore.getInstance());
+    }
 
     /**
      * Writes out the contents of TableStore. The default assumes that all tables
@@ -32,7 +35,9 @@ public interface Output {
      * @param tableStore
      * @throws IOException
      */
-    public void write(OutputStream outputStream, Map<String, Object> config, TableStore tableStore) throws IOException;
+    default void write(OutputStream outputStream, Map<String, Object> config, TableStore tableStore) throws IOException{
+        //TODO
+    }
 
     /**
      * Writes out the tables given. The default assumes that all tables
@@ -40,10 +45,16 @@ public interface Output {
      * configuration options.
      * @param outputStream
      * @param config
-     * @param tables
+     * @param table
      * @throws IOException
      */
-    public void write(OutputStream outputStream, Map<String, Object> config, Table... tables) throws IOException;
+    public void write(OutputStream outputStream, Map<String, Object> config, Table table) throws IOException;
+
+    default void write(OutputStream outputStream, Map<String, Object> config, Table... tables) throws IOException{
+        for (Table t: tables) {
+            write(outputStream, config, t);
+        }
+    }
 
     /**
      *
