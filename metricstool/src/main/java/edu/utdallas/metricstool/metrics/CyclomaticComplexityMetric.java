@@ -1,0 +1,267 @@
+package edu.utdallas.metricstool.metrics;
+
+import edu.utdallas.metricstool.MetricCollector;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map.Entry;
+
+import org.objectweb.asm.AnnotationVisitor;
+import org.objectweb.asm.Attribute;
+import org.objectweb.asm.Handle;
+import org.objectweb.asm.Label;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.TypePath;
+
+public class CyclomaticComplexityMetric extends MetricCollector {
+	
+	HashMap<Label, NodeData> nodeData; // should only be used via getNodeData()
+	
+	int edges;
+	
+	boolean jumped;
+	boolean lastGoto;
+	Label lastLabel;
+	
+	private static Label MANY = new Label();
+	
+	public CyclomaticComplexityMetric(MethodVisitor mv, String cName, int access, String mName, String desc, String signature,
+			String[] exceptions) {
+		super(mv, cName, access, mName, desc, signature, exceptions);
+		nodeData = new HashMap<Label, NodeData>();
+		edges = 0;
+		jumped = false;
+		lastGoto = false;
+		lastLabel = null;
+	}
+	
+	private NodeData getNodeData(Label label) {
+		NodeData nd = nodeData.get(label);
+		if (nd == null) {
+			nd = new NodeData(label);
+			nodeData.put(label, nd);
+			return nd;
+		} else {
+			return nd;
+		}
+	}
+	
+	@Override
+	public void visitParameter(String name, int access) {
+		lastGoto = false;
+	}
+
+	@Override
+	public AnnotationVisitor visitAnnotationDefault() {
+		lastGoto = false;
+		return null;
+	}
+
+	@Override
+	public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
+		lastGoto = false;
+		return null;
+	}
+
+	@Override
+	public AnnotationVisitor visitTypeAnnotation(int typeRef, TypePath typePath, String desc, boolean visible) {
+		lastGoto = false;
+		return null;
+	}
+
+	@Override
+	public AnnotationVisitor visitParameterAnnotation(int parameter, String desc, boolean visible) {
+		lastGoto = false;
+		return null;
+	}
+
+	@Override
+	public void visitAttribute(Attribute attr) {
+		lastGoto = false;
+	}
+
+	@Override
+	public void visitCode() {
+		lastGoto = false;
+	}
+
+	@Override
+	public void visitFrame(int type, int nLocal, Object[] local, int nStack, Object[] stack) {
+		lastGoto = false;
+	}
+
+	@Override
+	public void visitInsn(int opcode) {
+		if (opcode == IRETURN) {
+			lastGoto = true;
+		} else {
+			lastGoto = false;
+		}
+	}
+
+	@Override
+	public void visitIntInsn(int opcode, int operand) {
+		lastGoto = false;
+	}
+
+	@Override
+	public void visitVarInsn(int opcode, int var) {
+		lastGoto = false;
+	}
+
+	@Override
+	public void visitTypeInsn(int opcode, String type) {
+		lastGoto = false;
+	}
+
+	@Override
+	public void visitFieldInsn(int opcode, String owner, String name, String desc) {
+		lastGoto = false;
+	}
+
+	@Override
+	public void visitMethodInsn(int opcode, String owner, String name, String desc) {
+		lastGoto = false;
+	}
+
+	@Override
+	public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
+		lastGoto = false;
+		}
+
+	@Override
+	public void visitInvokeDynamicInsn(String name, String desc, Handle bsm, Object... bsmArgs) {
+		lastGoto = false;
+	}
+
+	@Override
+	public void visitJumpInsn(int opcode, Label label) {
+		NodeData lnd = getNodeData(lastLabel);
+		NodeData nd = getNodeData(label);
+		nd.in++;
+		if (lnd.next == null)
+			lnd.next = label;
+		else if (lnd.next != label)
+			lnd.next = MANY;
+		if (opcode == GOTO || opcode == JSR) { // goto instructions
+			lastGoto = true;
+			edges++;
+		} else { // if instructions
+			lastGoto = false;
+			if (!jumped)
+				edges += 3;
+			jumped = true;
+		}
+	}
+
+	@Override
+	public void visitLabel(Label label) {
+		NodeData nd = getNodeData(label);
+		if (!lastGoto && lastLabel != null) {
+			nd.in++; // fall-through from last label
+			NodeData lnd = getNodeData(lastLabel);
+			if (lnd.next == null) {
+				lnd.next = nd.label; // last only falls here for now
+			} else if (lnd.next != label) {
+				lnd.next = MANY; // last falls through but also goes elsewhere
+			}
+		}
+		jumped = false;
+		lastLabel = label;
+		lastGoto = false;
+	}
+
+	@Override
+	public void visitLdcInsn(Object cst) {
+		lastGoto = false;
+	}
+
+	@Override
+	public void visitIincInsn(int var, int increment) {
+		lastGoto = false;
+	}
+
+	@Override
+	public void visitTableSwitchInsn(int min, int max, Label dflt, Label... labels) {
+		lastGoto = false;
+	}
+
+	@Override
+	public void visitLookupSwitchInsn(Label dflt, int[] keys, Label[] labels) {
+		lastGoto = false;
+	}
+
+	@Override
+	public void visitMultiANewArrayInsn(String desc, int dims) {
+		lastGoto = false;
+	}
+
+	@Override
+	public AnnotationVisitor visitInsnAnnotation(int typeRef, TypePath typePath, String desc, boolean visible) {
+		lastGoto = false;
+		return null;
+	}
+
+	@Override
+	public void visitTryCatchBlock(Label start, Label end, Label handler, String type) {
+		lastGoto = false;
+	}
+
+	@Override
+	public AnnotationVisitor visitTryCatchAnnotation(int typeRef, TypePath typePath, String desc, boolean visible) {
+		lastGoto = false;
+		return null;
+	}
+
+	@Override
+	public void visitLocalVariable(String name, String desc, String signature, Label start, Label end, int index) {
+		lastGoto = false;
+	}
+
+	@Override
+	public AnnotationVisitor visitLocalVariableAnnotation(int typeRef, TypePath typePath, Label[] start, Label[] end,
+			int[] index, String desc, boolean visible) {
+		lastGoto = false;
+		return null;
+	}
+
+	@Override
+	public void visitLineNumber(int line, Label start) {
+		lastGoto = false;
+	}
+
+	@Override
+	public void visitMaxs(int maxStack, int maxLocals) {
+		lastGoto = false;
+	}
+	
+	@Override
+	public void visitEnd() {
+		nodeData.get(lastLabel).in = 0;
+		int n = nodeData.size() - 1;
+		for (Entry<Label, NodeData> e : nodeData.entrySet()) {
+			NodeData nd = e.getValue();
+			if (nd.next == null || nd.next == MANY)
+				continue;
+			NodeData ndnext = nodeData.get(nd.next);
+			if (ndnext.in == 1)
+				n--;
+		}
+		int c = edges - n + 2;
+		System.out.println("Cyclomatic Complexity: " + c);
+	}
+	
+	private class NodeData {
+		
+		Label label;
+		int in;		// number of incoming edges
+		Label next;	// next label (null = none, many = many)
+		
+		public NodeData(Label label) {
+			this.label = label;
+			this.in = 0;
+			this.next = null;
+		}
+	}
+
+}
