@@ -18,12 +18,12 @@ The following is the list of JHawk method metrics and the class implementing the
 * **Number of expressions**: TODO
   * [http://docs.oracle.com/javase/specs/jls/se8/html/jls-15.html](http://docs.oracle.com/javase/specs/jls/se8/html/jls-15.html)
 * **Max depth of nesting**: TODO
-* **Halstead length**: TODO
-* **Halstead vocabulary**: TODO
-* **Halstead volume**: TODO
-* **Halstead difficulty**: TODO
-* **Halstead effort**: TODO
-* **Halstead bugs**: TODO
+* **Halstead length**: `HalsteadLengthMetric`
+* **Halstead vocabulary**: `HalsteadVocabularyMetric`
+* **Halstead volume**: `HalsteadVolumeMetric`
+* **Halstead difficulty**: `HalsteadDifficultyMetric`
+* **Halstead effort**: `HalsteadEffortMetric`
+* **Halstead bugs**: `HalsteadBugsMetric`
 * **Total depth of nesting**: TODO
 * **Number of casts**: `CastMetric`
   * Currently only handles explicit downcasts.
