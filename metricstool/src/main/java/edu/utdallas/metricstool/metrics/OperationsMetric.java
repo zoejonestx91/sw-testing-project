@@ -87,6 +87,7 @@ public class OperationsMetric extends MetricCollector {
 
 	@Override
 	public void visitInsn(int opcode) {
+		try{
 		// =
 		if (       opcode == ISTORE || opcode == LSTORE || opcode == FSTORE || opcode == DSTORE
 				|| opcode == ASTORE || opcode == IASTORE || opcode == LASTORE || opcode == FASTORE
@@ -328,6 +329,7 @@ public class OperationsMetric extends MetricCollector {
 		} else if (opcode == DCONST_1) {
 			stack.push("1d");
 		}
+		} catch (EmptyStackException e) {}
 	}
 
 	@Override
