@@ -7,7 +7,7 @@ Our first problem is to create a tool capable of instrumenting Java programs usi
 
 Our second problem is to create a tool that will statically compute a set of metrics using ASM. We will refer to this tool as \mt{}.
 
-We would like to be able to offer our project as a basis for future extension to tackle research problems with regards to software metrics.
+We would like to be able to offer our project as a basis for future extension to tackle research problems with regards to software metrics. 
 
 \section{Technique Discussion}
 
@@ -17,11 +17,11 @@ To disassemble and analyze target projects, we will use ASM and Java Agent.
 
 \subsection{Metrics of Interest}
 
-There are several metrics that we will be interested in  collecting. We plan to cover all metrics listed under the JHawk method metrics listing~\cite{jhawkmetrics}, as well as some of the class metrics, and a couple of extra method metrics. Below, we speak to a selection of the metrics that may prove especially challenging or interesting.
+There are several metrics that we were interested in  collecting. We had planned to cover all metrics listed under the JHawk method metrics listing~\cite{jhawkmetrics}, as well as some of the class metrics, and a couple of extra method metrics. Unfortunately, some method level metrics proved to not be possible using just bytecode. Below, we speak to a selection of the metrics that proved especially challenging, interesting, or just impossible.
 
 \subsubsection{Comments}
 
-It is unclear to us at this time how best to approach gathering metrics for comments. Since comments in the source code do not appear to be persisted into the bytecode at compilation time, it is unclear how ASM can be used to gather information on them (since it operates on bytecode). At this time, our research indicates that there are no bytecode instructions pertaining to comments.
+Unfortunately, we are not able to do any metrics involving comments, as this is not something that is accessible from bytecode. 
 
 \subsubsection{Cyclomatic Complexity}
 
@@ -29,20 +29,20 @@ This metric is constructed from the attributes of the program's control flow gra
 
 \subsubsection{Classification}
 
-We are interested in also implementing simple heuristics to allow method classification for some level of statistical analysis. For example, identifying getters, setters, and constructors. We propose to also allow these heuristics to be extended by end users.
+We were interested in also implementing simple heuristics to allow method classification for some level of statistical analysis. For example, identifying getters, setters, and constructors. We propose to also allow these heuristics to be extended by end users.
 
 \section{Implementation Plan}
-\ct{} will be made to be run under Maven, for easy integration into existing projects. It will be able to output its results to the terminal or a file. If a project has an appropriately modified \texttt{pom.xml} file, then \ct{} can be run by using \texttt{mvn test}. A feature that we are considering is a script that will attempt to patch the relevant \texttt{pom.xml} file to include \ct{}.
+\ct{} was written to be ran under Maven, for easy integration into existing projects. It will be able to output its results to the terminal or a file. If a project has an appropriately modified \texttt{pom.xml} file, then \ct{} can be run by using \texttt{mvn test}. A feature that we had been considering is a script that will attempt to patch the relevant \texttt{pom.xml} file to include \ct{}.
 
-\mt{} will at the least have a command line tool, to ease its usage in scripts. We hope to be able to also create a GUI frontend, but we have concerns about the practicality of this in the given time period.
+\mt{} will at the least have a command line tool, to ease its usage in scripts. We had considered a GUI frontend, but we had concerns about the practicality of this in the given time period, and whether this would be suitable to the needs of the researcher.
 
-Both tools will be written in Java, so as to be able to take advantage of Java's reflection tools to disassemble and instrument projects. They will also likely share some of their code. While they are planned to be separate tools, their output will be designed to be merged if the researcher desires.
+Both tools are written in Java, so as to be able to take advantage of Java's reflection tools to disassemble and instrument projects. They do not share code between them, but experience gained from \ct{} was used to engineer \mt{}.
 
 \section{Experimental Plan}
 
 \subsection{Source Project Selection}
 
-Ideally, the projects we select should have the following attributes:
+We attempted to select our projects with the following attributes in mind.
 
 \begin{itemize}
 \item \textbf{Size} - We are required to select projects with at least 1,000 Lines of Code. To help validate the tool, we would want to have at least two that are near this limit, to simplify initial testing.
@@ -58,14 +58,14 @@ The following is our current list of test candidates:
 	\item \textbf{apache/commons-codec} - An encoding library.
     \item \textbf{apache/commons-lang} - A set of utilities for Java's lang package, or considered common enough to be included in lang.
     \item \textbf{apache/commons-io} - A set of IO utilities.
-    \item \textbf{Bukkit/Bukkit} - A video game server API.
+    \item \textbf{Bukkit/Bukkit} - A video game server API for Minecraft.
     \item \textbf{evernote/evernote-sdk-java} - The cloud API for a note-taking application.
     \item \textbf{docker-java/docker-java} - A software container API.
     \item \textbf{junit-team/junit4} - A testing framework.
     \item \textbf{RoaringBitmap/RoaringBitmap} - A data structure library
     \item \textbf{wg/scrypt} - A cryptographic library.
     \item \textbf{xerial/sqlite-jdbc} - A library for accessing SQLite databases in Java.
-    \item \textbf{cranshaw/sqlite-jdbc} - The predecessor of the previous library.\footnote{While this is not on the approved list we were given, we believe it will be suitable for our purposes.}
+   \item \textbf{sk89q/WorldGuard} - A Bukkit plugin.
 \end{itemize}
 
 \subsection{Validation}
@@ -135,15 +135,25 @@ With the shift to bitwise operations proving successful in reducing execution ti
 
 The only other change at play was the removal of an attempted optimization to detect classes that were not covered by a test. The purpose of this optimization had been to speed up the time to output the coverage information, but it was found that removing this functionality reduced test time to 1 minute prior to the above array implementation. The 40-second speedup that followed was a surprising result considering how little was changed.
 
+\subsection{Evaluation}
+
+Unfortunately, due to a mixup of deadlines we were unable to complete our evaluation for \ct{} or \mt{}. We focused primarily on doing an analysis on \mt{}, and this came at the cost of any evaluation of \ct{}.
+
 \subsection{Future Work}
 
 We overlooked one potential optimization for the static array approaches that may have allowed the boolean strategy to work and may have sped up the bit strategy further. Rather than allocating the nested array corresponding to line numbers \textit{when} a class finally gets covered, we allocate them all at once presuming each class will be covered. Furthermore, because the number of lines a class contains can be discovered by an ASM class visitor, it is possible to size these arrays appropriately to each class. This strategy is far more reasonable than our current approach.
 
 \section{MetricsTool}
 
+
 \subsection{Design and Architecture}
 
-As our imagined primary use case is intended for research purposes, we are emphasizing extensibility and versatility over performance. So, \mt{} uses an plugin-based architecture. To simplify development and to provide an example for end users, our default metrics are defined as plugins themselves. For our list of default metrics for initial release, please see the attached listing in the final report. While \mt{} takes lessons and some code from \ct{}, they are not directly compatible, as we do not need performance at the cost of everything else. The plugins are configured by a suite of Java annotations that are interpreted on load.
+The authors had high hopes for the original design and scope of \mt{}, and Ms. Jones has intentions of attempting to expand the architecture and scope of this tool. However, under scheduling pressure and unexpected obstacles, the authors had to reduce the scope to something that just works. The submitted version of \mt{} is referred to as \textbf{RC1}, and the planned version (and hopeful next release) is referred to as \textbf{R2}. RC1 uses workarounds to ensure that it could meet it's deadline. Some of the planned subsystems are included, but are in a partially completed state, and thus are disabled. We document our original intentions, the design's evolution, and our implementation in RC1. As of this writing \mt{} represents 3788 source lines of Java code.
+
+\subsection{Planned Design and Architecture}
+As our imagined primary use case is intended for research purposes, we are emphasizing extensibility and versatility over performance. So, \mt{} uses an plugin-based architecture. To simplify development and to provide an example for end users, our default metrics are defined as plugins themselves. For our list of default metrics for initial release, please see the listing in Table 1. While \mt{} takes lessons and some code from \ct{}, they are not directly compatible, as we do not need performance at the cost of everything else. The plugins are configured by a suite of Java annotations that are interpreted on load.
+
+Plugins are exposed to the ASM API, and use pretty much the same set of methods as standard ASM visitors. We will not document the Visitor architecture here, as it is well documented in the case of ASM.
 
 The collected metrics are stored by TableStore in a set of Tables, which are divided by the type of artifact. The cells in the tables are referenced by artifact identifier and metric identity.
 
@@ -160,19 +170,54 @@ The collected metrics are stored by TableStore in a set of Tables, which are div
 \mt{} can collect metrics at the following levels:
 
 \begin{itemize}
-\item package
-\item interface
-\item class
-\item method
-\item block
-\item statement
+\item \textbf{package} - Packages can contain other packages, classes, and interfaces.
+\item \textbf{class/interface} - As interfaces work on the same level as classes, and can be used as a type due to polymorphism and inheritance, we treat interfaces as a special case of classes.
+\item \textbf{method} - Methods are contained by a particular class. 
+\item \textbf{block} - Blocks are a sequence of code that execute without a disruption of execution flow.
+\item \textbf{statement}
 \end{itemize}
 
-Instrumentation is performed in much the same way that \ct{} adds instrumentation. Plugins are able to perform work before and after the instrumentation. When instrumented code is called, it connects to a handler in the Scheduler, which will then fire callbacks registered by the plugins. This will notify relevant plugins of the artifact, and allow them to analyze it.
+Instrumentation is performed using that same strategy as in \ct{}. Plugins are able to perform work before and after the instrumentation. When instrumented code is called, it connects to a handler in the Scheduler, which will then fire callbacks registered by the plugins. This will notify relevant plugins of the artifact, and allow them to analyze it.
 
-\subsection{Limitations}
+\mt{} was also originally designed to be capable of formatting output for delimited files, JSON, XML, or serialization.
 
-Compared to tools like JHawk, \mt{} has some weaknesses. Since we were aiming to implement all of the JHawk methods that were feasible, a major goal for the evaluation phase was to duplicate exactly the results for the metrics that we can collect. Unfortunately, while we can approach certain metrics using our own strategies, it is impossible to replicate some of the results produced by JHawk.
+\subsection{Implementation of RC1}
+
+RC1 is designed to execute during the compile goal of Maven, and outputs a comma delimited table to standard output. At this juncture, we unfortunately do not use our planned Scheduler, Table subsystem, or annotation configuration subsystem.
+
+% \begin{table*}[]
+% \centering
+% \caption{Method Level Metrics in \mt{} RC1}
+% \label{my-label}
+% \begin{tabular}{|l|l|}
+% \hline
+% \textbf{Metric} & \textbf{Description} \\ \hline
+% Name                &                      \\ \hline
+% Cyclomatic Complexity                &  Quantifies the complexity of code, and thus how many test cases are necessary for all paths coverage.~\cite{mccabe}                    \\ \hline
+% Modifiers                &  The access modifiers on a particular field. eg, public, static, volatile \\ \hline
+
+% \end{tabular}
+% \end{table*}
+
+\subsection{Discussion}
+
+Compared to tools like JHawk, \mt{} has some weaknesses. Since we were aiming to implement all of the JHawk methods that were feasible, a major goal for the evaluation phase was to duplicate exactly the results for the metrics that we can collect. Unfortunately, while we can approach certain metrics using our own strategies, it is impossible to replicate some of the results produced by JHawk. We suspect that it almost certainly analyzes source code directly too.
+
+For more notes on individual metric implementation details, see the file \texttt{metrics.md} under the \mt{} project documentation directory.
+
+\subsubsection{Tracking Control Flow}
+
+We had the opportunity to build a control flow graph while traversing the bytecode using ASM. While we ultimately chose not to do this (instead favoring a more dynamic approach) for such metrics as the cyclomatic complexity metric, some of the problems we encoutered would have been the same. Tracking the control flow becomes difficult unless every possible type of jump has been accouted for. It was easy to identify the major bytecode features associated with basic loops and conditional statements, but we did not have time to consider all possible cases. Among those that remain for future work are switch statements and the throwing of exceptions. Exceptions are particularly tricky as it is difficult to analyze exactly which statements can be the source of exceptions without extensive analysis.
+
+\subsubsection{Discovering Variable Declarations}
+
+The Java bytecode contains information on a per-method basis that documents the \textit{used} local variables. Unfortunately, source code may contain unused local variables that nevertheless occupy space on the stack. We can actually infer that these variables exists, but it is not always possible to reason about how many of them there are as different types in Java have different sizes on the stack. We expect that our numbers on this metric will be lower than those produced by JHawk, which has the advantage of performing analysis on the source code.
+
+\subsubsection{Cast Operations}
+
+Casts between different types of objects are of two general types: upcasts and downcasts. Upcasts may be implicit or explicit, as an object can be readily assigned to a name of a parent type, so performing an explicit cast is optional. This is not the case for downcasts, as the JVM must check at run time whether or not the cast is valid. This manifests as an operation in bytecode that can be used to track explicit downcasts.
+
+Of course, since this bytecode operation is limited to downcasts, it becomes significantly more difficult to determine where upcasts are taking place. As a result of this, we only track downcasts.
 
 \subsubsection{Counting Operators and Operands}
 
@@ -203,10 +248,60 @@ public void m8() {
 
 These two methods compile to identical bytecode and hence cannot be distinguished between by ASM for the purposes of the Halstead metrics. On the other hand, since JHawk analyzes the source and considers a return statement to be an operator, it considers the two methods to have different values for the Halstead metrics.
 
-\subsection{Future Work}
+We do not consider operators to have types. This is to say that we treat the addition operator as not having distinct variations to handle doubles versus integers.
+
+Determining the number of unique operands proved the greatest challenge among the metrics. While it is easier to keep count of operands as they are used, the Halstead metrics need to know how many unique operands are used. This is problematic since bytecode does not represent each operation or operand in such a way that all the components of the operation are local to each other; other operations may take place in-between the must be tracked using some sort of stack emulation. This is exactly the approach we have taken, but it has some severe limitations as we have barely scratched the surface of the huge number of considerations that need to be made.
+
+\subsection{Evaluation}
+We evaluated RC1 against the Starter Edition of JHawk6. We chose to use this for comparison as the technology employed is similar, and as we were able to dump it's analysis of an entire project to a CSV file. This is also well used in research, according to JHawk's developer~\cite{jhawk_academic_papers}. This feature is unfortunately not available in the free version. We wrote a Python script to automate the comparison between the two CSV files.
+
+For our purposes, we are considering JHawk6 to be the canonical implementation for our metrics (Though JHawk6 crashed on \texttt{commons-lang} - behavior that we do not attempt to replicate). Unfortunately, due to a scheduling mixup, we were not able to complete our analysis in time for publication. Nevertheless, we have made the collected data available on our project's repository.
+
+% Please add the following required packages to your document preamble:
+% \usepackage{booktabs}
+% \usepackage{graphicx}
+% \begin{table}[]
+% \centering
+% \caption{Error Rates for Method Metrics}
+% \label{error}
+
+% \begin{tabular}{@{}ll@{}}
+% Metric                 & Error Rate \\ \hline
+% Cyclomatic Complexity  & \textbf{}  \\
+% Variable Declarations  & \textbf{}  \\
+% Variable References    & \textbf{}  \\
+% Max Depth of Nesting   &            \\
+% Halstead Length        &            \\
+% Halstead Vocabulary    &            \\
+% Halstead Volume        &            \\
+% Halstead Difficulty    &            \\
+% Halstead Effort        &            \\
+% Halstead Bugs          &            \\
+% Total Depth of Nesting &            \\
+% Number of Casts        &            \\
+% Number of Loops        &           
+% \end{tabular}
+% \end{table}
+
+\subsection{Future Work and Possible Applications}
+This section includes both features under consideration and ideas for research that \mt{} could enable.
 
 \subsubsection{Multithreading}
 Currently, \mt{} is single-threaded. However, the design is meant to permit multithreading in the future without the need to modify plugins. 
 
 \subsubsection{Storage Enhancements}
-At this juncture, \mt{} has a fairly naive implementation for the Table subsystem. In later iterations, we would hope to have more efficient mechanisms for storage.
+At this juncture, RC1 of \mt{} does not use the Table subsystem. The planned implementation had a fairly naive implementation for the Table subsystem that is not particularly efficient, and does not implement type-checking. In later iterations, we would hope to have more efficient mechanisms for storage.
+
+\subsubsection{Support for Dynamic Instrumentation}
+Currently, \mt{} does not have any plugins for instumentation or dynamic analysis. We had hoped to be able to implement this feature, but as of RC1, we did not find enough time to finish or test.
+
+\subsubsection{Version Control Integration}
+A possible future direction of \mt{} would be awareness and integration of version control systems into analysis capabilities. This would be helpful for being able to analyze the history of a project over a history of commits.
+
+\subsubsection{Support for Aspect-Oriented Programmming}
+
+At current, \mt{} is not configured to support Aspect Oriented Programming (AOP). Conceptually, Aspects are pieces of code that can wrap around other pieces of code, and are an effective means of dealing with cross cutting concerns. As what \mt{} would see is "weaved" into the class files, it would be unaware of how aspects influenced the bytecode present.
+
+\section{GitHub Repository}
+
+Our project, as well as instructions for it's usage, can be accessed at the following URL: \url{https://github.com/zoejonestx91/sw-testing-project}.
