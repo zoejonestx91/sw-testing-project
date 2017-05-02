@@ -6,6 +6,7 @@ import edu.utdallas.metricstool.MetricCollector;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EmptyStackException;
 import java.util.HashSet;
@@ -431,8 +432,7 @@ public class OperationsMetric extends MetricCollector {
 
 	@Override
 	public void visitEnd() {
-		System.out.println("Number of Operators: " + opCount);
-		System.out.println("Number of Operands: " + andCount);
+		MTUtils.write(opCount + "," + andCount);
 	}
 
 }

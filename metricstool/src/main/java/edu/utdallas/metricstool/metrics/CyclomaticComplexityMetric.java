@@ -1,5 +1,6 @@
 package edu.utdallas.metricstool.metrics;
 
+import edu.utdallas.metricstool.MTUtils;
 import edu.utdallas.metricstool.MetricCollector;
 import org.objectweb.asm.*;
 
@@ -251,7 +252,7 @@ public class CyclomaticComplexityMetric extends MetricCollector {
 			edges--;
 		}
 		int c = (edges - merges) - (nodes - merges) + 2;
-		System.out.print(c);
+		MTUtils.write(c);
 	}
 	
 	private class NodeData {

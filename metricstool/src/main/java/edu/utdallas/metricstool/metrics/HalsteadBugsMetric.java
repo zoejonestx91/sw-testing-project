@@ -2,6 +2,7 @@ package edu.utdallas.metricstool.metrics;
 
 import org.objectweb.asm.MethodVisitor;
 
+import edu.utdallas.metricstool.MTUtils;
 import edu.utdallas.metricstool.MetricCollector;
 
 public class HalsteadBugsMetric extends MetricCollector {
@@ -22,7 +23,7 @@ public class HalsteadBugsMetric extends MetricCollector {
 	public void visitEnd() {
 		//System.out.println(column);//TODO
 		//getCurrentMethodRow().addEntry(column, mName);
-		System.out.print(getHalsteadBugs());
+		MTUtils.write(getHalsteadBugs());
 	}
 
 }

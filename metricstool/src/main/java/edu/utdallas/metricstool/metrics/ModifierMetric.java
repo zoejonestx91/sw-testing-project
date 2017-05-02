@@ -1,5 +1,6 @@
 package edu.utdallas.metricstool.metrics;
 
+import edu.utdallas.metricstool.MTUtils;
 import edu.utdallas.metricstool.MetricCollector;
 import edu.utdallas.metricstool.annotations.InjectColumn;
 import edu.utdallas.metricstool.annotations.Metric;
@@ -8,6 +9,7 @@ import edu.utdallas.metricstool.tables.Column;
 import edu.utdallas.metricstool.utils.AccessBitflagConverter;
 import org.objectweb.asm.MethodVisitor;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -40,6 +42,6 @@ public class ModifierMetric extends MetricCollector {
                 output.append(", ");
             }
         }
-        System.out.print(output);
+    	MTUtils.write(modifiers.size());
     }
 }

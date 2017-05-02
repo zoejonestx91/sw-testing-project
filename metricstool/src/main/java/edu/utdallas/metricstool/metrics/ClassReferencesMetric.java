@@ -111,7 +111,7 @@ public class ClassReferencesMetric extends MetricCollector {
 
 	@Override
 	public void visitEnd() {
-		System.out.print(getClasses());
+		MTUtils.write(classes.size());
 	}
 
 }

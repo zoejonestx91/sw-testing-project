@@ -1,10 +1,14 @@
 package edu.utdallas.metricstool.metrics;
 
+import edu.utdallas.metricstool.MTUtils;
 import edu.utdallas.metricstool.MetricCollector;
 import edu.utdallas.metricstool.annotations.InjectColumn;
 import edu.utdallas.metricstool.annotations.Metric;
 import edu.utdallas.metricstool.enums.ArtifactType;
 import edu.utdallas.metricstool.tables.Column;
+
+import java.io.IOException;
+
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 
@@ -19,7 +23,7 @@ public class VarDecMetric extends MetricCollector {
 			String[] exceptions) {
 		super(mv, cName, access, mName, desc, signature, exceptions);
 		this.count = 0;
-		if ((access & ACC_STATIC) == 0)
+		if ((access & (ACC_STATIC | ACC_NATIVE | ACC_ABSTRACT)) == 0)
 			this.count--; // Correct for "declaration" of `this`
 	}
 
@@ -30,7 +34,7 @@ public class VarDecMetric extends MetricCollector {
 
 	@Override
 	public void visitEnd() {
-		System.out.print(count);
+		MTUtils.write(count);
 	}
 
 }

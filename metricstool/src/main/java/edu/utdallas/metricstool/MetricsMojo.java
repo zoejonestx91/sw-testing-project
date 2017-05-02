@@ -8,9 +8,11 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 
 @Mojo( name = "metrics" )
@@ -24,6 +26,8 @@ public class MetricsMojo extends AbstractMojo {
 	
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
+		MTUtils.init();
+		
 		char sep = System.getProperty("file.separator").charAt(0);
 		if (!targets.equals("") && targets != null) {
 	    	for (String s : targets.split(",")) {
@@ -37,6 +41,8 @@ public class MetricsMojo extends AbstractMojo {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}*/
+		
+		MTUtils.finish();
 	}
 	
 	private void runMetrics(File file) {

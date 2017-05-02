@@ -23,7 +23,7 @@ public class ArgcMetric extends MetricCollector {
 
 	@Override
 	public void visitEnd() {
-		System.out.print(MTUtils.parseDescArgs(desc).size());
+		MTUtils.write(MTUtils.parseDescArgs(desc).size());
 	}
 
 }

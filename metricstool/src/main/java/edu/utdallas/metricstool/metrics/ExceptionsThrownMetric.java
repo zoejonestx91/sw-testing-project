@@ -39,7 +39,10 @@ public class ExceptionsThrownMetric extends MetricCollector {
 	
 	@Override
 	public void visitEnd() {
-		System.out.print(getExceptions());
+		int x = 0;
+		if (exceptions != null)
+			x = exceptions.length;
+		MTUtils.write(x);
 	}
 
 }

@@ -1,5 +1,6 @@
 package edu.utdallas.metricstool.metrics;
 
+import edu.utdallas.metricstool.MTUtils;
 import edu.utdallas.metricstool.MetricCollector;
 import edu.utdallas.metricstool.annotations.InjectColumn;
 import edu.utdallas.metricstool.annotations.Metric;
@@ -45,7 +46,7 @@ public class LocalMethodsMetric extends MetricCollector {
 	
 	@Override
 	public void visitEnd() {
-		System.out.print( getLocalMethods());
+		MTUtils.write(methods.size());
 	}
 
 }

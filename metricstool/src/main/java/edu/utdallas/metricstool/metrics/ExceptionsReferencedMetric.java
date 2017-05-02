@@ -58,7 +58,7 @@ public class ExceptionsReferencedMetric extends MetricCollector {
 					referenced.add(s);
 			}
 		}
-		System.out.print(getExceptions());
+		MTUtils.write(referenced.size());
 	}
 
 }

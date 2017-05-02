@@ -1,9 +1,44 @@
 package edu.utdallas.metricstool;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 
 public class MTUtils {
+	
+	private static BufferedWriter out;
+	
+	public static void init() {
+		 try {
+			out = new BufferedWriter(new FileWriter("metrics.csv"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.err.println("[METRICSTOOL] Unable to access metrics.csv. Cannot write metrics.");
+		}
+	}
+	
+	public static void finish() {
+		try {
+			out.flush();
+			out.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public static void write(String s) {
+		try {
+			out.write(s);
+			out.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 //	// example usage
 //	public static void main(String[] a) {
@@ -120,6 +155,14 @@ public class MTUtils {
 			}
 		}
 		return names;
+	}
+
+	public static void write(int i) {
+		write(String.valueOf(i));
+	}
+
+	public static void write(double d) {
+		write(String.valueOf(d));
 	}
 }
 	

@@ -5,6 +5,7 @@ import edu.utdallas.metricstool.metrics.*;
 import edu.utdallas.metricstool.tables.Table;
 import org.objectweb.asm.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class MainMethodVisitor extends MethodVisitor implements Opcodes {
@@ -58,13 +59,14 @@ public class MainMethodVisitor extends MethodVisitor implements Opcodes {
 		collectors.add(new LocalMethodsMetric(mv, cName, access, mName, desc, signature, exceptions));
 		collectors.add(new ExceptionsReferencedMetric(mv, cName, access, mName, desc, signature, exceptions, crm));
 		collectors.add(new ExceptionsThrownMetric(mv, cName, access, mName, desc, signature, exceptions));
+		collectors.add(new ModifierMetric(mv, cName, access, mName, desc, signature, exceptions));
 		collectors.add(new LinesMetric(mv, cName, access, mName, desc, signature, exceptions));
 
 		if(printedHeader == false) {
 			printedHeader = true;
-			System.out.println("Name, Cyclomatic Complexity, Argument count, Variable Declarations," +
-					" Variable References, Casts, Operator Count, Class References, External Methods," +
-					" Local Methods, Exceptions Referenced, Exceptions Thrown, Lines");
+			MTUtils.write("Package,Class,Name,COMP,NOA,VDEC,VREF,"
+					+ "HLTH,HVOC,HVOL,HDIF,HEFF,HBUG,CAST,NOPR,NAND,CREF,XMET,"
+					+ "LMET,EXCR,EXCT,MOD,NLOC");
 		}
 		/*if(columnsInitialized == false){
 			methodTable = TableStore.getInstance().getTable(ArtifactType.METHOD);
@@ -107,14 +109,19 @@ public class MainMethodVisitor extends MethodVisitor implements Opcodes {
 
 	@Override
 	public void visitEnd() {
-		System.out.print("\n" + cName + ":" + mName + desc + ",");
+		if (mName.equals("<clinit>"))
+			return;
+		int index = cName.lastIndexOf('/');
+		String className = cName.substring(index + 1);
+		String packageName = cName.substring(0, index).replaceAll("/", ".");
+		MTUtils.write("\n" + packageName + "," + className + ",");
 		//Row currentRow = methodTable.addRow(cName + ":" + mName + desc);
 		//MetricCollector.setCurrentMethodRow(currentRow);
 		//for (MetricCollector m : collectors) { m.visitEnd(); }
 		for(int i = 0; i < collectors.size(); i++){
 			collectors.get(i).visitEnd();
 			if(i != collectors.size() - 1){
-				System.out.print(",");
+				MTUtils.write(",");
 			}
 		}
 		super.visitEnd();

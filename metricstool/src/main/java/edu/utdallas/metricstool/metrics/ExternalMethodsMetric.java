@@ -47,7 +47,7 @@ public class ExternalMethodsMetric extends MetricCollector {
 	
 	@Override
 	public void visitEnd() {
-		System.out.print(getExternalMethods());
+		MTUtils.write(methods.size());
 	}
 
 }

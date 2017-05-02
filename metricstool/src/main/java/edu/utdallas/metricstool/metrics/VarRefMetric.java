@@ -1,5 +1,6 @@
 package edu.utdallas.metricstool.metrics;
 
+import edu.utdallas.metricstool.MTUtils;
 import edu.utdallas.metricstool.MetricCollector;
 import edu.utdallas.metricstool.annotations.InjectColumn;
 import edu.utdallas.metricstool.annotations.Metric;
@@ -8,6 +9,7 @@ import edu.utdallas.metricstool.tables.Column;
 import edu.utdallas.metricstool.tables.Table;
 import org.objectweb.asm.MethodVisitor;
 
+import java.io.IOException;
 import java.util.HashSet;
 
 @Metric(key = "varref", name = "Variable References", artifactType = ArtifactType.METHOD, metricType = Integer.class)
@@ -35,7 +37,7 @@ public class VarRefMetric extends MetricCollector {
 
 	@Override
 	public void visitEnd() {
-		System.out.print(vars.size());
+		MTUtils.write(vars.size());
 	}
 
 }
