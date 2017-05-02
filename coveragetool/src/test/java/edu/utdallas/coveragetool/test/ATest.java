@@ -17,12 +17,12 @@ public class ATest {
 		tester = new A();
 	}
 
-	@Test
+	@Test @Ignore
 	public void sumTest() {
 		assertEquals(11, tester.sum(5, 6));
 	}
 	
-	@Test
+	@Test @Ignore
 	public void switchTest() {
 		tester.switchMeth(3, 4);
 	}
