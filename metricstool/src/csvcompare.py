@@ -60,8 +60,10 @@ def main():
             res = None
             firsta = True
             for colsa in act:
-                if first:
-                    first = False
+                if firsta:
+                    firsta = False
+                    continue
+                if len(colsa) < len(metrics):
                     continue
                 # match method identities
                 if colst[0].strip() == mapped(colsa, 0) and colst[1].strip() == mapped(colsa, 1) and colst[2].strip() == mapped(colsa, 2):
