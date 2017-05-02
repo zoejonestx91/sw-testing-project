@@ -25,10 +25,10 @@ The dependencies block of the project's POM must include the ASM framework as a 
 ```
 <plugin>
 	<groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-surefire-plugin</artifactId>
-    <configuration>
-    	<argLine>-Xms512m -Xmx12g -javaagent:coveragetool-1.0.jar=root.package</argLine>
-    	<properties>
+    	<artifactId>maven-surefire-plugin</artifactId>
+    	<configuration>
+		<argLine>-Xms512m -Xmx12g -javaagent:coveragetool-1.0.jar=root.package</argLine>
+		<properties>
 			<property>	
 				<name>listener</name>
 				<value>edu.utdallas.coveragetool.agent.UnitListener</value>
@@ -49,10 +49,10 @@ This project is known to work for the Joda-Time project (https://github.com/Joda
 ```
 <plugin>
 	<groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-surefire-plugin</artifactId>
-    <configuration>
-    	<argLine>-Xms512m -Xmx12g -javaagent:coveragetool-1.0.jar=org.joda.time</argLine>
-    	<properties>
+    	<artifactId>maven-surefire-plugin</artifactId>
+    	<configuration>
+		<argLine>-Xms512m -Xmx12g -javaagent:coveragetool-1.0.jar=org.joda.time</argLine>
+		<properties>
 			<property>	
 				<name>listener</name>
 				<value>edu.utdallas.coveragetool.agent.UnitListener</value>
