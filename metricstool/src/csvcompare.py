@@ -11,6 +11,32 @@ metrics = ["Package","Class","Name","COMP","NOA","VDEC","VREF","HLTH","HVOC","HV
 acc = []
 acci = 0
 
+mapping = (
+    (0, 1),
+    (1, 2),
+    (2, 3),
+    (3, 4),
+    (4, 14),
+    (5, 20),
+    (6, 23),
+    (7, 6),
+    (8, 7),
+    (9, 26),
+    (10, 16),
+    (11, 8),
+    (12, 9),
+    (13, 24),
+    (14, 21),
+    (15, 27),
+    (16, 10),
+    (17, 11),
+    (18, 12),
+    (19, 18),
+    (20, 22),
+    (21, 15),
+    (22, 13)
+)
+
 def main():
     global acc
     global acci
@@ -38,7 +64,7 @@ def main():
                     first = False
                     continue
                 # match method identities
-                if colst[0] == mapped(colsa, 0) and colst[1] == mapped(colsa, 1) and colst[2] == mapped(colsa, 2):
+                if colst[0].strip() == mapped(colsa, 0) and colst[1].strip() == mapped(colsa, 1) and colst[2].strip() == mapped(colsa, 2):
                     if res is not None:
                         res = None
                         break
@@ -63,9 +89,9 @@ def compare(colst, colsa):
     for i in range(0, len(metrics)):
         res.append(0)
     for i in range(3, len(metrics)):
-        ai = float(mapped(colsa, i))
-        ti = float(colst[i])
-        if mapped(colsa, i) and colst[i]:
+        ai = float(mapped(colsa, i).strip())
+        ti = float(colst[i].strip())
+        if mapped(colsa, i) and colst[i].strip():
             res[i] = 0
         else:
             res[i] = abs(ai - ti) / (abs(ai) + abs(ti))
@@ -82,32 +108,7 @@ def record(res):
 
 
 def mapped(colsa, i):
-    mapping = (
-        (0,1),
-        (1,2),
-        (2,3),
-        (3,4),
-        (4,14),
-        (5,20),
-        (6,23),
-        (7,6),
-        (8,7),
-        (9,26),
-        (10,16),
-        (11,8),
-        (12,9),
-        (13,24),
-        (14,21),
-        (15,27),
-        (16,10),
-        (17,11),
-        (18,12),
-        (19,18),
-        (20,22),
-        (21,15),
-        (22,13)
-    )
-    return colsa[mapping[i][1]]
+    return colsa[mapping[i][1]].strip()
 
 
 if __name__ == "__main__":
